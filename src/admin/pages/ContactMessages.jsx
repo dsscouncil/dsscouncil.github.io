@@ -58,6 +58,7 @@ export default function ContactMessages() {
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
               <span className="font-semibold text-navy">{m.name}</span>
               {m.year && <span>· {m.year}</span>}
+              {m.gr && <span>· GR: {m.gr}</span>}
             </div>
             <a
               href={`mailto:${m.email}?subject=${encodeURIComponent('Re: ' + (m.subject || 'Your message to the Student Council'))}`}
@@ -93,7 +94,7 @@ export default function ContactMessages() {
             <div className="rounded-2xl bg-surface border border-border p-4 text-sm">
               <div className="flex items-center justify-between gap-2">
                 <span className="font-semibold text-navy">{managing.name}</span>
-                <span className="text-xs text-muted-foreground">{managing.year || '—'}</span>
+                <span className="text-xs text-muted-foreground">{managing.year || '—'}{managing.gr ? ` · GR: ${managing.gr}` : ''}</span>
               </div>
               <a href={`mailto:${managing.email}`} className="mt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-navy hover:text-gold">
                 <Mail className="h-3.5 w-3.5" /> {managing.email} <ExternalLink className="h-3 w-3" />

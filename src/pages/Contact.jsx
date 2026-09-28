@@ -15,7 +15,7 @@ export default function Contact() {
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [form, setForm] = useState({ name: '', year: '', email: '', subject: '', message: '' })
+  const [form, setForm] = useState({ name: '', year: '', email: '', gr: '', subject: '', message: '' })
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
 
   const submit = async (e) => {
@@ -25,7 +25,7 @@ export default function Contact() {
     try {
       await addContactMessage(form)
       setSent(true)
-      setForm({ name: '', year: '', email: '', subject: '', message: '' })
+      setForm({ name: '', year: '', email: '', gr: '', subject: '', message: '' })
     } catch (err) {
       setError(err?.message || 'Something went wrong — please try again.')
     } finally {
@@ -112,6 +112,10 @@ export default function Contact() {
                   <div>
                     <label className="text-xs font-semibold uppercase tracking-wide text-navy/70">Email *</label>
                     <input required type="email" value={form.email} onChange={set('email')} className={`mt-2 ${inputCls}`} placeholder="you@example.com" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wide text-navy/70">Student's GR</label>
+                    <input value={form.gr} onChange={set('gr')} className={`mt-2 ${inputCls}`} placeholder="e.g. 12345 (optional)" />
                   </div>
                   <div>
                     <label className="text-xs font-semibold uppercase tracking-wide text-navy/70">Subject</label>

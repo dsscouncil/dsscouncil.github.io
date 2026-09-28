@@ -52,13 +52,13 @@ const mapPillar = (r) => ({ id: r.id, title: r.title, desc: r.description, order
 const toPillar = (p) => ({ id: p.id || uid(), title: p.title, description: p.desc, sort: p.order ?? 0 })
 
 const mapContact = (r) => ({
-  id: r.id, name: r.name, year: r.year_group || '', email: r.email || '',
+  id: r.id, name: r.name, year: r.year_group || '', email: r.email || '', gr: r.gr || '',
   subject: r.subject || '', message: r.message, handled: r.handled, notes: r.notes || '',
   date: new Date(r.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
   createdAt: r.created_at,
 })
 const toContact = (c) => ({
-  id: c.id || uid(), name: c.name, year_group: c.year || '', email: c.email,
+  id: c.id || uid(), name: c.name, year_group: c.year || '', email: c.email, gr: c.gr || '',
   subject: c.subject || '', message: c.message, handled: !!c.handled, notes: c.notes || '',
 })
 
@@ -158,6 +158,7 @@ export async function submitContactMessage(form) {
     p_subject: form.subject || '',
     p_message: form.message,
     p_year_group: form.year || '',
+    p_gr: form.gr || '',
   })
   if (error) throw new Error(error.message)
   // Best-effort email notification (never blocks the message being stored)
@@ -165,7 +166,7 @@ export async function submitContactMessage(form) {
     await fetch(`${SUPABASE_URL}/functions/v1/contact-email`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-      body: JSON.stringify({ record: { id: data?.id, name: form.name, email: form.email, subject: form.subject || '', message: form.message, year_group: form.year || '' } }),
+      body: JSON.stringify({ record: { id: data?.id, name: form.name, email: form.email, subject: form.subject || '', message: form.message, year_group: form.year || '', gr: form.gr || '' } }),
     })
   } catch { /* email is best-effort */ }
 }
