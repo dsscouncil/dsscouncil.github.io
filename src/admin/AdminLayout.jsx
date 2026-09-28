@@ -40,15 +40,15 @@ export default function AdminLayout() {
       {/* Top bar */}
       <header className="sticky top-0 z-40 bg-white border-b border-border">
         <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-5 lg:px-8">
-          <Link to="/admin" className="flex items-center gap-3">
-            <span className="inline-block h-10 w-10 overflow-hidden rounded-full bg-white">
-              <img src={LOGO} alt="Council logo" className="h-full w-full object-contain" />
-            </span>
-            <span className="leading-tight">
+          <div className="flex items-center gap-3">
+            <Link to="/" title="Back to main website" className="inline-block h-10 w-10 overflow-hidden rounded-full bg-white">
+              <img src={LOGO} alt="Council logo — back to main website" className="h-full w-full object-contain" />
+            </Link>
+            <Link to="/admin" className="leading-tight">
               <span className="block font-display text-lg font-bold text-navy">Governor&rsquo;s Console</span>
               <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Council Admin</span>
-            </span>
-          </Link>
+            </Link>
+          </div>
           <div className="flex items-center gap-4">
             <span className="hidden text-sm text-muted-foreground sm:block">
               {session ? (session.name || session.username) : 'Admin'}
