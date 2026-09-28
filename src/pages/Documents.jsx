@@ -40,15 +40,20 @@ export default function Documents() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {list.map((d, i) => (
               <Reveal key={d.id} delay={(i % 3) * 80}>
-                <a href={d.url || '#'} target={d.url ? '_blank' : undefined} rel="noreferrer"
-                  className="group block h-full rounded-2xl bg-card border border-border gold-block p-6">
-                  <span className="rounded-full bg-surface px-3 py-1 text-xs font-semibold text-navy">{d.category}</span>
-                  <h3 className="mt-3 flex items-center gap-2 font-display text-lg font-bold text-navy group-hover:text-gold transition-colors">
-                    <FileText className="h-4 w-4 text-gold" /> {d.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{d.description}</p>
-                  {d.url && <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-gold">Open document <ExternalLink className="h-3.5 w-3.5" /></span>}
-                </a>
+                {(() => {
+                  const Tag = d.url ? 'a' : 'div'
+                  const linkProps = d.url ? { href: d.url, target: '_blank', rel: 'noreferrer' } : {}
+                  return (
+                    <Tag {...linkProps} className="group block h-full rounded-2xl bg-card border border-border gold-block p-6">
+                      <span className="rounded-full bg-surface px-3 py-1 text-xs font-semibold text-navy">{d.category}</span>
+                      <h3 className="mt-3 flex items-center gap-2 font-display text-lg font-bold text-navy group-hover:text-gold transition-colors">
+                        <FileText className="h-4 w-4 text-gold" /> {d.title}
+                      </h3>
+                      <p className="mt-2 text-sm text-muted-foreground">{d.description}</p>
+                      {d.url && <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-gold">Open document <ExternalLink className="h-3.5 w-3.5" /></span>}
+                    </Tag>
+                  )
+                })()}
               </Reveal>
             ))}
           </div>

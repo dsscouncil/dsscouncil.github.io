@@ -54,10 +54,10 @@ export default function Clubs() {
                   <h3 className="font-display text-xl font-bold text-navy group-hover:text-gold transition-colors">{club.name}</h3>
                   <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{club.description}</p>
                   <div className="mt-4 space-y-3 text-xs text-muted-foreground">
-                    <div className="inline-flex items-center gap-3"><CalendarDays className="h-4 w-4 text-gold" /> {club.schedule}</div>
-                    <div className="inline-flex items-center gap-3 ml-4"><MapPin className="h-4 w-4 text-gold" /> {club.location}</div>
-                    <div className="inline-flex items-center gap-3"><User className="h-4 w-4 text-gold" /> {club.leads}</div>
-                    <p className="pt-1 font-semibold text-navy/70">How to join: {club.join}</p>
+                    {club.schedule && club.schedule !== '-' && <div className="inline-flex items-center gap-3"><CalendarDays className="h-4 w-4 text-gold" /> {club.schedule}</div>}
+                    {club.location && club.location !== '-' && <div className={`inline-flex items-center gap-3 ${club.schedule && club.schedule !== '-' ? 'ml-4' : ''}`}><MapPin className="h-4 w-4 text-gold" /> {club.location}</div>}
+                    {club.leads && club.leads !== '-' && <div className="inline-flex items-center gap-3"><User className="h-4 w-4 text-gold" /> {club.leads}</div>}
+                    {club.join && club.join !== '-' && <p className="pt-1 font-semibold text-navy/70">How to join: {club.join}</p>}
                   </div>
                 </div>
               </Reveal>

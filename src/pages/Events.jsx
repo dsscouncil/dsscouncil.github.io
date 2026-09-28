@@ -73,7 +73,8 @@ export default function Events() {
     [data.events],
   )
 
-  const upcoming = withDates.filter((e) => e.date.year > new Date().getFullYear() || e.date.month >= new Date().getMonth() + 1)
+  const today0 = new Date(); today0.setHours(0, 0, 0, 0)
+  const upcoming = withDates.filter((e) => new Date(e.date.year, e.date.month - 1, e.date.day) >= today0)
 
   const monthGroups = useMemo(() => {
     const groups = []
@@ -210,7 +211,37 @@ export default function Events() {
           )}
 
           {tab === 'past' && (
-            <p className="text-center text-muted-foreground py-16">No past events to show yet — the term has just begun.</p>
+            <div className="space-y-6">
+              {withDates.filter((e) => {
+                const today = new Date(); today.setHours(0, 0, 0, 0)
+                return new Date(e.date.year, e.date.month - 1, e.date.day) < today
+              }).map((e, i) => (
+                <Reveal key={e.id} delay={i * 80}>
+                  <div className="rounded-2xl bg-card border border-border p-6 flex flex-col md:flex-row gap-6 md:items-center opacity-80">
+                    <div className="shrink-0 w-20 h-20 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center">
+                      <span className="font-display text-3xl font-bold text-navy/70">{e.day}</span>
+                      <span className="text-xs font-semibold tracking-widest text-navy/60">{e.month}</span>
+                    </div>
+                    <div className="flex-1">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{e.type}</span>
+                      <h3 className="font-display text-xl font-bold text-navy mt-1">{e.title}</h3>
+                      <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
+                        <span>{new Date(e.date.year, e.date.month - 1, e.date.day).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                        {e.location && <span className="inline-flex items-center gap-1.5"><MapPin className="h-4 w-4 text-muted-foreground/60" />{e.location}</span>}
+                        {e.org && <span className="inline-flex items-center gap-1.5"><Users className="h-4 w-4 text-muted-foreground/60" />{e.org}</span>}
+                      </div>
+                      {e.description && <p className="mt-3 text-sm text-muted-foreground">{e.description}</p>}
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+              {withDates.filter((e) => {
+                const today = new Date(); today.setHours(0, 0, 0, 0)
+                return new Date(e.date.year, e.date.month - 1, e.date.day) < today
+              }).length === 0 && (
+                <p className="text-center text-muted-foreground py-16">No past events yet — the term has just begun.</p>
+              )}
+            </div>
           )}
         </div>
       </section>

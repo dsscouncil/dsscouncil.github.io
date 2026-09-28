@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { X } from 'lucide-react'
 
 export const inputCls =
@@ -15,6 +16,13 @@ export function Field({ label, required, children }) {
 }
 
 export function Modal({ title, onClose, children, wide }) {
+  // Lock page scroll while the modal is open
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [])
+
   return (
     <div className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto p-4 md:p-10" role="dialog" aria-modal="true">
       <div className="fixed inset-0 bg-navy-deep/70 backdrop-blur-sm" onClick={onClose} />

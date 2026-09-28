@@ -25,7 +25,7 @@ export default function AdminLayout() {
     { to: '/admin/contact-messages', label: 'Contact Messages', icon: Mail, count: data.contactMessages.length },
     { to: '/admin/news', label: 'News', icon: Newspaper, count: data.news.length },
     { to: '/admin/documents', label: 'Documents', icon: FileText, count: data.documents.length },
-    { to: '/admin/circle-quotes', label: 'Circle Quotes', icon: Target },
+    { to: '/admin/circle-quotes', label: 'Circle Quotes', icon: Target, count: data.circleQuotes.length },
     { to: '/admin/leadership-messages', label: 'Leadership Messages', icon: Quote, count: data.leadershipMessages.length },
     { to: '/admin/settings', label: 'Settings', icon: Settings },
   ]
@@ -120,6 +120,23 @@ export default function AdminLayout() {
 
         {/* Content */}
         <main className="min-w-0 flex-1 pb-16">
+          {/* Mobile console nav (sidebar is hidden below lg) */}
+          <div className="lg:hidden -mt-2 mb-6 -mx-1 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}">
+            {[...main, ...more].map(({ to, label, end }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                className={({ isActive }) =>
+                  `shrink-0 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap transition-colors ${
+                    isActive ? 'bg-navy text-white' : 'bg-white border border-border text-navy/70'
+                  }`
+                }
+              >
+                {label}
+              </NavLink>
+            ))}
+          </div>
           <Outlet />
         </main>
       </div>
