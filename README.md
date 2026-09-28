@@ -45,10 +45,10 @@ Note: the Supabase URL and publishable key are already embedded in `src/admin/su
 
 Visit `/#/admin`. Accounts are stored server-side (hashed) in the `admin_accounts` table:
 
-| Username    | Password       |
-| ----------- | -------------- |
-| Huzefa      | hattaree50     |
-| Burhanuddin | burhanuddin50  |
+| Username     | Password       |
+| -----------  | -------------- |
+| exampleuser  | example        |
+| exampleuser2 | example2       |
 
 To add/remove admins or change passwords: edit the `admin_accounts` table in the Supabase dashboard (Table Editor), or ask for a one-line SQL statement. Passwords are stored as `admin_hash_password(password, username)` — to set a new one run:
 
