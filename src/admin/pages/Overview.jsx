@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import {
-  MessageSquareHeart, Users, Megaphone, CalendarDays, UsersRound, Newspaper, FileText, Lightbulb, ArrowRight,
+  MessageSquareHeart, Users, Megaphone, CalendarDays, UsersRound, Newspaper, FileText, Lightbulb, ArrowRight, Mail,
 } from 'lucide-react'
 import { useAdmin } from '../store.jsx'
 
@@ -27,6 +27,7 @@ export default function Overview() {
 
   const cards = [
     { to: '/admin/voice', icon: MessageSquareHeart, value: data.submissions.length, label: 'Submissions' },
+    { to: '/admin/contact-messages', icon: Mail, value: data.contactMessages.length, label: 'Contact Messages' },
     { to: '/admin/members', icon: Users, value: data.members.length, label: 'Council Members' },
     { to: '/admin/initiatives', icon: Megaphone, value: data.initiatives.length, label: 'Initiatives' },
     { to: '/admin/events', icon: CalendarDays, value: data.events.length, label: 'Events' },

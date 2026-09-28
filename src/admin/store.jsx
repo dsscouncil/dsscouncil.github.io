@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import {
-  supabase, fetchSiteData, fetchSubmissions, submitVoice, uploadVoiceFile,
+  supabase, fetchSiteData, fetchSubmissions, fetchContactMessages,  submitVoice, uploadVoiceFile, submitContactMessage,
   adminLogin, adminValidate, adminLogout, adminWrite, adminManageAccount,
   adminResetContent, toDbRow, fromDbRow, COLLECTIONS,
   SESSION_KEY,
@@ -30,8 +30,8 @@ export function AdminProvider({ children }) {
 
   const refresh = async () => {
     try {
-      const [site, subs] = await Promise.all([fetchSiteData(), fetchSubmissions(session?.token)])
-      setData({ ...site, submissions: subs })
+      const [site, subs, contacts] = await Promise.all([fetchSiteData(), fetchSubmissions(session?.token), fetchContactMessages(session?.token)])
+      setData({ ...site, submissions: subs, contactMessages: contacts })
       setError(null)
     } catch (e) {
       setError(e.message || 'Failed to load data')
@@ -67,6 +67,7 @@ export function AdminProvider({ children }) {
 
       // ── public ──
       addSubmission: async (s) => submitVoice(s),
+      addContactMessage: async (m) => submitContactMessage(m),
       uploadFile: (file) => uploadVoiceFile(file),
 
       // ── auth ──
@@ -74,10 +75,10 @@ export function AdminProvider({ children }) {
         const result = await adminLogin(username, password)
         setSession(result)
         localStorage.setItem(SESSION_KEY, JSON.stringify(result))
-        // Session just became valid — pull the private submissions now.
+        // Session just became valid — pull the private data now.
         try {
-          const subs = await fetchSubmissions(result.token)
-          setData((d) => (d ? { ...d, submissions: subs } : d))
+          const [subs, contacts] = await Promise.all([fetchSubmissions(result.token), fetchContactMessages(result.token)])
+          setData((d) => (d ? { ...d, submissions: subs, contactMessages: contacts } : d))
         } catch { /* non-fatal; refresh will retry */ }
         return true
       },

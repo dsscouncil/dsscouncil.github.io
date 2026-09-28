@@ -11,8 +11,27 @@ const inputCls =
   'w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-navy placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-gold/60 focus:border-gold transition'
 
 export default function Contact() {
-  const { data } = useAdmin()
+  const { data, addContactMessage } = useAdmin()
   const [sent, setSent] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const [form, setForm] = useState({ name: '', year: '', email: '', subject: '', message: '' })
+  const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
+
+  const submit = async (e) => {
+    e.preventDefault()
+    setBusy(true)
+    setError('')
+    try {
+      await addContactMessage(form)
+      setSent(true)
+      setForm({ name: '', year: '', email: '', subject: '', message: '' })
+    } catch (err) {
+      setError(err?.message || 'Something went wrong — please try again.')
+    } finally {
+      setBusy(false)
+    }
+  }
 
   return (
     <>
@@ -70,41 +89,43 @@ export default function Contact() {
                 <div className="mt-8 rounded-2xl bg-surface border border-border p-8 text-center">
                   <Send className="h-10 w-10 text-gold mx-auto" />
                   <h3 className="mt-4 font-display text-xl font-bold text-navy">Message sent!</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">The Council will get back to you as soon as possible.</p>
+                  <p className="mt-2 text-sm text-muted-foreground">The Council has been notified by email and will get back to you as soon as possible.</p>
                   <button onClick={() => setSent(false)} className="mt-6 rounded-full bg-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors">
                     Send another
                   </button>
                 </div>
               ) : (
-                <form className="mt-8 space-y-5" onSubmit={(e) => { e.preventDefault(); setSent(true) }}>
+                <form className="mt-8 space-y-5" onSubmit={submit}>
                   <div className="grid sm:grid-cols-2 gap-5">
                     <div>
                       <label className="text-xs font-semibold uppercase tracking-wide text-navy/70">Name *</label>
-                      <input required className={`mt-2 ${inputCls}`} placeholder="Your name" />
+                      <input required value={form.name} onChange={set('name')} className={`mt-2 ${inputCls}`} placeholder="Your name" />
                     </div>
                     <div>
                       <label className="text-xs font-semibold uppercase tracking-wide text-navy/70">Year Group</label>
-                      <select className={`mt-2 ${inputCls}`} defaultValue="">
-                        <option value="" disabled>Select</option>
+                      <select value={form.year} onChange={set('year')} className={`mt-2 ${inputCls}`}>
+                        <option value="">Select</option>
                         {yearOptions.map((y) => <option key={y}>{y}</option>)}
                       </select>
                     </div>
                   </div>
                   <div>
                     <label className="text-xs font-semibold uppercase tracking-wide text-navy/70">Email *</label>
-                    <input required type="email" className={`mt-2 ${inputCls}`} placeholder="you@example.com" />
+                    <input required type="email" value={form.email} onChange={set('email')} className={`mt-2 ${inputCls}`} placeholder="you@example.com" />
                   </div>
                   <div>
                     <label className="text-xs font-semibold uppercase tracking-wide text-navy/70">Subject</label>
-                    <input className={`mt-2 ${inputCls}`} placeholder="What's this about?" />
+                    <input value={form.subject} onChange={set('subject')} className={`mt-2 ${inputCls}`} placeholder="What's this about?" />
                   </div>
                   <div>
                     <label className="text-xs font-semibold uppercase tracking-wide text-navy/70">Message *</label>
-                    <textarea required rows={5} className={`mt-2 ${inputCls}`} placeholder="Write your message…" />
+                    <textarea required rows={5} value={form.message} onChange={set('message')} className={`mt-2 ${inputCls}`} placeholder="Write your message…" />
                   </div>
-                  <button type="submit" className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-3.5 text-sm font-semibold text-navy hover:bg-gold-soft transition-colors">
-                    <Send className="h-4 w-4" />
-                    Send Message
+                  {error && (
+                    <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
+                  )}
+                  <button type="submit" disabled={busy} className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-3.5 text-sm font-semibold text-navy hover:bg-gold-soft transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                    {busy ? 'Sending…' : (<><Send className="h-4 w-4" /> Send Message</>)}
                   </button>
                 </form>
               )}

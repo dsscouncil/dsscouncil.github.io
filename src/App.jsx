@@ -17,6 +17,7 @@ import AdminLogin from './admin/AdminLogin.jsx'
 import AdminLayout from './admin/AdminLayout.jsx'
 import AdminOverview from './admin/pages/Overview.jsx'
 import AdminVoice from './admin/pages/Voice.jsx'
+import AdminContactMessages from './admin/pages/ContactMessages.jsx'
 import AdminMembers from './admin/pages/Members.jsx'
 import AdminInitiatives from './admin/pages/Initiatives.jsx'
 import AdminEvents from './admin/pages/Events.jsx'
@@ -69,6 +70,7 @@ function AdminGate() {
       <Route element={<AdminLayout />}>
         <Route index element={<AdminOverview />} />
         <Route path="voice" element={<AdminVoice />} />
+        <Route path="contact-messages" element={<AdminContactMessages />} />
         <Route path="members" element={<AdminMembers />} />
         <Route path="initiatives" element={<AdminInitiatives />} />
         <Route path="events" element={<AdminEvents />} />

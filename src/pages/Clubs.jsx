@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { CalendarDays, MapPin, User, PlusCircle, Handshake } from 'lucide-react'
+import { CalendarDays, MapPin, User, Handshake } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { useAdmin, YEAR_GROUPS } from '../admin/store.jsx'
@@ -22,7 +22,7 @@ export default function Clubs() {
       <PageHero
         eyebrow="Clubs & Activities"
         title="Find your passion beyond the classroom"
-        sub="Explore the clubs and extracurricular activities available at Dubai Scholars. Don't see what you're looking for? Suggest a new club."
+        sub="Explore the clubs and extracurricular activities available at Dubai Scholars."
       />
 
       <section className="py-16 md:py-20">
@@ -39,13 +39,6 @@ export default function Clubs() {
                 {c}
               </button>
             ))}
-            <a
-              href={`mailto:${data.settings.councilEmail}?subject=New%20Club%20Suggestion`}
-              className="ml-auto inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2 text-sm font-semibold text-navy hover:bg-gold-soft transition-colors"
-            >
-              <PlusCircle className="h-4 w-4" />
-              Suggest a New Club
-            </a>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

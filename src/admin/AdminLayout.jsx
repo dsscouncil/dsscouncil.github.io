@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import {
   LayoutGrid, MessageSquareHeart, Users, Megaphone, CalendarDays, UsersRound,
   MoreHorizontal, ChevronDown, ChevronUp, Newspaper, FileText, Target, Quote, Settings,
-  LogOut, ExternalLink,
+  LogOut, ExternalLink, Mail,
 } from 'lucide-react'
 import { useAdmin } from './store.jsx'
 import { LOGO } from '../data/content.js'
@@ -22,6 +22,7 @@ export default function AdminLayout() {
     { to: '/admin/clubs', label: 'Clubs', icon: UsersRound, count: data.clubs.length },
   ]
   const more = [
+    { to: '/admin/contact-messages', label: 'Contact Messages', icon: Mail, count: data.contactMessages.length },
     { to: '/admin/news', label: 'News', icon: Newspaper, count: data.news.length },
     { to: '/admin/documents', label: 'Documents', icon: FileText, count: data.documents.length },
     { to: '/admin/circle-quotes', label: 'Circle Quotes', icon: Target },

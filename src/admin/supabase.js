@@ -51,6 +51,17 @@ const toStat = (s) => ({ id: s.id || uid(), label: s.label, sub: s.sub, value: s
 const mapPillar = (r) => ({ id: r.id, title: r.title, desc: r.description, order: r.sort ?? 0 })
 const toPillar = (p) => ({ id: p.id || uid(), title: p.title, description: p.desc, sort: p.order ?? 0 })
 
+const mapContact = (r) => ({
+  id: r.id, name: r.name, year: r.year_group || '', email: r.email || '',
+  subject: r.subject || '', message: r.message, handled: r.handled, notes: r.notes || '',
+  date: new Date(r.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
+  createdAt: r.created_at,
+})
+const toContact = (c) => ({
+  id: c.id || uid(), name: c.name, year_group: c.year || '', email: c.email,
+  subject: c.subject || '', message: c.message, handled: !!c.handled, notes: c.notes || '',
+})
+
 const mapIdea = (r) => ({ id: r.id, category: r.category, title: r.title, status: r.status, description: r.description, order: r.sort ?? 0 })
 const toIdea = (i) => ({ id: i.id || uid(), category: i.category, title: i.title, status: i.status, description: i.description, sort: i.order ?? 0 })
 
@@ -128,6 +139,35 @@ export async function fetchSubmissions(token) {
   if (error) throw new Error(error.message)
   const rows = Array.isArray(data) ? data : []
   return rows.map(mapSubmission)
+}
+
+// Same pattern for contact messages (public INSERT only, admin read via RPC).
+export async function fetchContactMessages(token) {
+  if (!token) return []
+  const { data, error } = await supabase.rpc('admin_list_contact_messages', { p_token: token })
+  if (error) throw new Error(error.message)
+  const rows = Array.isArray(data) ? data : []
+  return rows.map(mapContact)
+}
+
+// Public contact form — validated server-side; emails the council via edge function.
+export async function submitContactMessage(form) {
+  const { data, error } = await supabase.rpc('submit_contact_message', {
+    p_name: form.name,
+    p_email: form.email,
+    p_subject: form.subject || '',
+    p_message: form.message,
+    p_year_group: form.year || '',
+  })
+  if (error) throw new Error(error.message)
+  // Best-effort email notification (never blocks the message being stored)
+  try {
+    await fetch(`${SUPABASE_URL}/functions/v1/contact-email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+      body: JSON.stringify({ record: { id: data?.id, name: form.name, email: form.email, subject: form.subject || '', message: form.message, year_group: form.year || '' } }),
+    })
+  } catch { /* email is best-effort */ }
 }
 
 // Public voice submission — inserts with default status/published via RLS check
@@ -217,6 +257,7 @@ export const COLLECTIONS = {
   leadershipMessages: { table: 'leadership_messages', to: toMessage, map: mapMessage },
   circleQuotes: { table: 'circle_quotes', to: toQuote, map: mapQuote },
   submissions: { table: 'submissions', to: toSubmission, map: mapSubmission },
+  contactMessages: { table: 'contact_messages', to: toContact, map: mapContact },
 }
 
 export function toDbRow(collection, item) {
