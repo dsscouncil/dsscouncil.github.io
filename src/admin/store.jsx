@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import {
-  supabase, fetchSiteData, fetchSubmissions, submitVoice,
+  supabase, fetchSiteData, fetchSubmissions, submitVoice, uploadVoiceFile,
   adminLogin, adminValidate, adminLogout, adminWrite, adminManageAccount,
   adminResetContent, toDbRow, fromDbRow, COLLECTIONS,
   SESSION_KEY,
@@ -30,7 +30,7 @@ export function AdminProvider({ children }) {
 
   const refresh = async () => {
     try {
-      const [site, subs] = await Promise.all([fetchSiteData(), fetchSubmissions()])
+      const [site, subs] = await Promise.all([fetchSiteData(), fetchSubmissions(session?.token)])
       setData({ ...site, submissions: subs })
       setError(null)
     } catch (e) {
@@ -67,12 +67,18 @@ export function AdminProvider({ children }) {
 
       // ── public ──
       addSubmission: async (s) => submitVoice(s),
+      uploadFile: (file) => uploadVoiceFile(file),
 
       // ── auth ──
       login: async (username, password) => {
         const result = await adminLogin(username, password)
         setSession(result)
         localStorage.setItem(SESSION_KEY, JSON.stringify(result))
+        // Session just became valid — pull the private submissions now.
+        try {
+          const subs = await fetchSubmissions(result.token)
+          setData((d) => (d ? { ...d, submissions: subs } : d))
+        } catch { /* non-fatal; refresh will retry */ }
         return true
       },
       logout: async () => {

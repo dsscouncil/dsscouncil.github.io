@@ -60,12 +60,15 @@ const mapSubmission = (r) => ({
   gr: r.gr_number || '', name: r.submitter_name || '', year: r.year_group || '',
   ref: r.ref, notes: r.notes || '', date: new Date(r.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
   createdAt: r.created_at,
+  file: r.file_url ? { url: r.file_url, name: r.file_name || 'attachment' } : null,
 })
 const toSubmission = (s) => ({
   id: s.id || uid(), category: s.category, priority: s.priority, status: s.status,
   published: !!s.published, title: s.title, description: s.description,
   gr_number: s.gr || '', submitter_name: s.name || '', year_group: s.year || '',
   notes: s.notes || '', ref: s.ref,
+  file_url: s.file?.url || s.fileUrl || '',
+  file_name: s.file?.name || s.fileName || '',
 })
 
 const mapSettings = (r) => ({
@@ -117,10 +120,14 @@ export async function fetchSiteData() {
   }
 }
 
-export async function fetchSubmissions() {
-  const { data, error } = await supabase.from('submissions').select('*').order('created_at', { ascending: false })
-  if (error) throw error
-  return data.map(mapSubmission)
+// Admin-only read: submissions have no public SELECT policy, so we must go
+// through a session-gated RPC. Without a valid token this returns [] (public).
+export async function fetchSubmissions(token) {
+  if (!token) return []
+  const { data, error } = await supabase.rpc('admin_list_submissions', { p_token: token })
+  if (error) throw new Error(error.message)
+  const rows = Array.isArray(data) ? data : []
+  return rows.map(mapSubmission)
 }
 
 // Public voice submission — inserts with default status/published via RLS check
@@ -138,9 +145,33 @@ export async function submitVoice(form) {
     submitter_name: form.name || '',
     year_group: form.year || '',
     ref,
+    file_name: form.fileName || '',
+    file_url: form.fileUrl || '',
   })
   if (error) throw error
   return ref
+}
+
+// ── Optional evidence upload (public-read bucket; paths are random UUIDs) ──
+export const VOICE_BUCKET = 'voice-uploads'
+export const MAX_UPLOAD_MB = 5
+
+export async function uploadVoiceFile(file) {
+  const ext = (file.name.split('.').pop() || 'bin').toLowerCase()
+  const path = `${uid()}.${ext}`
+  const { error } = await supabase.storage.from(VOICE_BUCKET).upload(path, file, {
+    cacheControl: '3600',
+    upsert: false,
+    contentType: file.type || undefined,
+  })
+  if (error) throw new Error(error.message)
+  return {
+    path,
+    name: file.name,
+    size: file.size,
+    type: file.type || '',
+    url: `${SUPABASE_URL}/storage/v1/object/public/${VOICE_BUCKET}/${path}`,
+  }
 }
 
 // ── Admin auth ──

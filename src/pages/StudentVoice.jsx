@@ -1,25 +1,56 @@
 import { useState } from 'react'
-import { MessageCircle, ShieldCheck } from 'lucide-react'
+import { MessageCircle, ShieldCheck, Paperclip, X, Loader2, AlertCircle } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { useAdmin, YEAR_GROUPS, VOICE_CATEGORIES, VOICE_PRIORITIES } from '../admin/store.jsx'
+import { MAX_UPLOAD_MB } from '../admin/supabase.js'
 
 const inputCls =
   'w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-navy placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-gold/60 focus:border-gold transition'
 
 export default function StudentVoice() {
-  const { data, addSubmission } = useAdmin()
+  const { data, addSubmission, uploadFile } = useAdmin()
   const [sent, setSent] = useState(false)
   const [ref, setRef] = useState('')
+  const [file, setFile] = useState(null)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
   const [form, setForm] = useState({ gr: '', name: '', year: '', category: '', priority: 'Medium', title: '', description: '' })
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
 
-  const submit = (e) => {
+  const pickFile = (e) => {
+    const f = e.target.files?.[0]
+    e.target.value = '' // allow re-selecting the same file
+    if (!f) return
+    if (f.size > MAX_UPLOAD_MB * 1024 * 1024) {
+      setError(`File is too large — please keep it under ${MAX_UPLOAD_MB}MB.`)
+      return
+    }
+    setError('')
+    setFile(f)
+  }
+
+  const submit = async (e) => {
     e.preventDefault()
-    const submissionRef = addSubmission(form)
-    setRef(submissionRef)
-    setSent(true)
-    setForm({ gr: '', name: '', year: '', category: '', priority: 'Medium', title: '', description: '' })
+    setError('')
+    setBusy(true)
+    try {
+      const payload = { ...form }
+      if (file) {
+        const up = await uploadFile(file)
+        payload.fileName = up.name
+        payload.fileUrl = up.url
+      }
+      const submissionRef = await addSubmission(payload)
+      setRef(submissionRef)
+      setSent(true)
+      setFile(null)
+      setForm({ gr: '', name: '', year: '', category: '', priority: 'Medium', title: '', description: '' })
+    } catch (err) {
+      setError(err?.message || 'Something went wrong — please try again.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
@@ -108,8 +139,47 @@ export default function StudentVoice() {
                     <textarea required value={form.description} onChange={set('description')} rows={5} className={`mt-2 ${inputCls}`} placeholder="Tell us more — what's the idea, why does it matter, and how could it work?" />
                   </div>
 
-                  <button type="submit" className="w-full rounded-full bg-gold px-7 py-3.5 text-sm font-semibold text-navy hover:bg-gold-soft transition-colors">
-                    Share Your Voice
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wide text-navy/70">Evidence (optional)</label>
+                    <input type="file" id="voice-evidence" className="hidden" onChange={pickFile} accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.txt,.csv" />
+                    {!file ? (
+                      <label
+                        htmlFor="voice-evidence"
+                        className="mt-2 flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-border bg-surface px-4 py-3.5 text-sm text-muted-foreground transition-colors hover:border-gold hover:text-navy"
+                      >
+                        <Paperclip className="h-4 w-4 text-gold shrink-0" />
+                        <span>Attach a photo or document as evidence — PDF, images or Office files, up to {MAX_UPLOAD_MB}MB</span>
+                      </label>
+                    ) : (
+                      <div className="mt-2 flex items-center justify-between gap-3 rounded-xl border border-border bg-surface px-4 py-3">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <Paperclip className="h-4 w-4 text-gold shrink-0" />
+                          <span className="truncate text-sm font-medium text-navy">{file.name}</span>
+                          <span className="shrink-0 text-xs text-muted-foreground">{Math.max(1, Math.round(file.size / 1024))} KB</span>
+                        </div>
+                        <button type="button" onClick={() => setFile(null)} aria-label="Remove file" className="shrink-0 rounded-full p-1 text-muted-foreground hover:bg-navy/5 hover:text-navy transition-colors">
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {error && (
+                    <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                      <AlertCircle className="h-4 w-4 shrink-0" />
+                      {error}
+                    </div>
+                  )}
+
+                  <button type="submit" disabled={busy} className="w-full rounded-full bg-gold px-7 py-3.5 text-sm font-semibold text-navy hover:bg-gold-soft transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                    {busy ? (
+                      <span className="inline-flex items-center justify-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Sending…
+                      </span>
+                    ) : (
+                      'Share Your Voice'
+                    )}
                   </button>
                   <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-1.5">
                     <ShieldCheck className="h-3.5 w-3.5 text-gold" />

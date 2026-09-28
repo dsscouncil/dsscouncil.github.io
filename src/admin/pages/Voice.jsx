@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trash2, Eye, EyeOff } from 'lucide-react'
+import { Trash2, Eye, EyeOff, Paperclip, ExternalLink } from 'lucide-react'
 import { useAdmin, VOICE_STATUSES } from '../store.jsx'
 import { Modal, PageHead, StatusPill, Chip, Field, inputCls } from '../ui.jsx'
 
@@ -39,6 +39,20 @@ export default function Voice() {
               <span>· {s.ref}</span>
               <span>· {s.date}</span>
             </div>
+            {s.file && (
+              <a
+                href={s.file.url}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-surface px-3.5 py-2.5 text-sm font-medium text-navy transition-colors hover:border-gold"
+              >
+                <span className="flex items-center gap-2 min-w-0">
+                  <Paperclip className="h-4 w-4 shrink-0 text-gold" />
+                  <span className="truncate">{s.file.name}</span>
+                </span>
+                <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+              </a>
+            )}
             <div className="mt-5 flex flex-wrap items-center gap-2">
               <select value={s.status} onChange={(e) => update('submissions', s.id, { status: e.target.value })}
                 className="rounded-full border border-border bg-white px-4 py-2 text-xs font-semibold text-navy focus:outline-none focus:ring-2 focus:ring-gold/50">
@@ -74,6 +88,20 @@ export default function Voice() {
             <Field label="Council Notes (private)">
               <textarea rows={3} className={inputCls} value={managing.notes || ''} onChange={(e) => setManaging({ ...managing, notes: e.target.value })} placeholder="Internal notes about this submission…" />
             </Field>
+            {managing.file && (
+              <a
+                href={managing.file.url}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-between gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-medium text-navy transition-colors hover:border-gold"
+              >
+                <span className="flex items-center gap-2.5 min-w-0">
+                  <Paperclip className="h-4 w-4 shrink-0 text-gold" />
+                  <span className="truncate">{managing.file.name}</span>
+                </span>
+                <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+              </a>
+            )}
             <button
               onClick={() => { update('submissions', managing.id, managing); setManaging(null) }}
               className="w-full rounded-full bg-navy px-6 py-3 text-sm font-semibold text-white hover:bg-navy-deep transition-colors"
