@@ -1,5 +1,4 @@
-import { useMemo } from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { CalendarPlus, CalendarDays, MapPin, Users, Clock } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
@@ -20,59 +19,42 @@ function resolveDate(e) {
 }
 
 const pad = (n) => String(n).padStart(2, '0')
-const escIcs = (s) =>
-  String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n')
 
-// Real .ics download — opens in iPhone/Google/Outlook calendars.
-function downloadIcs(e) {
+// Opens the event prefilled in Google Calendar (all-day, Dubai timezone).
+function googleCalendarUrl(e) {
   const d = resolveDate(e)
-  if (!d) return
-  const start = `${d.year}${pad(d.month)}${pad(d.day)}`
+  if (!d) return null
   const endDt = new Date(d.year, d.month - 1, d.day + 1) // all-day: end = next day
-  const end = `${endDt.getFullYear()}${pad(endDt.getMonth() + 1)}${pad(endDt.getDate())}`
-  const desc = [e.description, e.org && `Organised by: ${e.org}`].filter(Boolean).join('\n')
-  const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
-  const ics = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Dubai Scholars Student Council//Events//EN',
-    'CALSCALE:GREGORIAN',
-    'BEGIN:VEVENT',
-    `UID:${e.id}@dsscouncil.github.io`,
-    `DTSTAMP:${stamp}`,
-    `DTSTART;VALUE=DATE:${start}`,
-    `DTEND;VALUE=DATE:${end}`,
-    `SUMMARY:${escIcs(e.title)}`,
-    desc ? `DESCRIPTION:${escIcs(desc)}` : null,
-    e.location ? `LOCATION:${escIcs(e.location)}` : null,
-    'END:VEVENT',
-    'END:VCALENDAR',
-  ].filter(Boolean).join('\r\n')
-  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `${(e.title || 'event').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.ics`
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(url)
+  const dates = `${d.year}${pad(d.month)}${pad(d.day)}/${endDt.getFullYear()}${pad(endDt.getMonth() + 1)}${pad(endDt.getDate())}`
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: e.title || 'Council Event',
+    dates,
+    details: [e.description, e.org && `Organised by: ${e.org}`].filter(Boolean).join('\n'),
+  })
+  if (e.location) params.set('location', e.location)
+  params.set('ctz', 'Asia/Dubai')
+  return `https://calendar.google.com/calendar/render?${params}`
 }
 
 function AddToCalendarButton({ event, compact }) {
-  const d = resolveDate(event)
+  const url = googleCalendarUrl(event)
+  const cls = `inline-flex items-center gap-2 rounded-full border border-border font-semibold text-navy transition-colors hover:border-gold hover:text-gold ${
+    compact ? 'px-4 py-1.5 text-xs' : 'px-5 py-2.5 text-sm'
+  }`
+  if (!url) {
+    return (
+      <button disabled title="Event date not set" className={`${cls} disabled:opacity-40`}>
+        <CalendarPlus className="h-4 w-4" />
+        Add to Calendar
+      </button>
+    )
+  }
   return (
-    <button
-      onClick={() => downloadIcs(event)}
-      disabled={!d}
-      title={d ? `Adds ${d.day} ${MONTHS[d.month - 1]} ${d.year} to your calendar` : 'Event date not set'}
-      className={`inline-flex items-center gap-2 rounded-full border border-border font-semibold text-navy transition-colors hover:border-gold hover:text-gold disabled:opacity-40 ${
-        compact ? 'px-4 py-1.5 text-xs' : 'px-5 py-2.5 text-sm'
-      }`}
-    >
+    <a href={url} target="_blank" rel="noreferrer" className={cls} title="Opens in Google Calendar">
       <CalendarPlus className="h-4 w-4" />
       Add to Calendar
-    </button>
+    </a>
   )
 }
 
