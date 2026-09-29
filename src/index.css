@@ -63,3 +63,23 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Circle diagram: smooth fill/label transitions on hover */
+.circle-ring path {
+  transition: fill 0.35s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.35s cubic-bezier(0.16, 1, 0.3, 1), stroke-width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.circle-quote {
+  animation: quote-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes quote-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

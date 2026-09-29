@@ -64,28 +64,28 @@ function CirclesDiagram({ circles }) {
           if (!circle) return null
           const style = RING_STYLES[key] || DEFAULT_STYLE
           return (
-            <g key={key} onClick={() => setActive(key)} onMouseEnter={() => setActive(key)}>
+            <g key={key} onClick={() => setActive(key)} onMouseEnter={() => setActive(key)} onMouseLeave={() => setActive(null)}>
               <path
                 d={path}
                 fillRule="evenodd"
-                fill={style.fill}
+                fill={active === key ? 'hsl(39 53% 57% / 0.18)' : style.fill}
                 stroke={active === key ? 'hsl(39 53% 57%)' : style.stroke}
                 strokeWidth={active === key ? '3' : '1.5'}
-                style={{ cursor: 'pointer', transition: 'stroke 0.25s, stroke-width 0.25s' }}
+                className="circle-ring"
               />
-              <text fill={style.textFill} dominantBaseline="middle" className="select-none" style={{ fontFamily: 'var(--font-display)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', pointerEvents: 'none' }}>
+              <text fill={active === key ? 'hsl(39 53% 45%)' : style.textFill} dominantBaseline="middle" className="select-none" style={{ fontFamily: 'var(--font-display)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', pointerEvents: 'none', transition: 'fill 0.35s cubic-bezier(0.16, 1, 0.3, 1)' }}>
                 <textPath href={`#${arc}`} startOffset="50%" textAnchor="middle">{circle.label}</textPath>
               </text>
             </g>
           )
         })}
-        <g onClick={() => setActive(core.key)} onMouseEnter={() => setActive(core.key)}>
+        <g onClick={() => setActive(core.key)} onMouseEnter={() => setActive(core.key)} onMouseLeave={() => setActive(null)}>
           <path
             d="M 192 250 A 58 58 0 1 0 308 250 A 58 58 0 1 0 192 250 Z"
-            fill="hsl(39 53% 57%)"
+            fill={active === core.key ? 'hsl(39 53% 67%)' : 'hsl(39 53% 57%)'}
             stroke={active === core.key ? 'hsl(213 65% 9%)' : 'hsl(39 53% 47%)'}
             strokeWidth={active === core.key ? '3' : '1.5'}
-            style={{ cursor: 'pointer', transition: 'stroke 0.25s, stroke-width 0.25s' }}
+            className="circle-ring"
           />
           <text x="250" y="250" textAnchor="middle" dominantBaseline="middle" fill="hsl(213 65% 9%)" className="select-none" style={{ fontFamily: 'var(--font-display)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', pointerEvents: 'none' }}>
             {core.label}
@@ -94,12 +94,12 @@ function CirclesDiagram({ circles }) {
       </svg>
       <div className="rounded-3xl border border-border bg-white p-8 gold-outline">
         {activeCircle ? (
-          <>
+          <div key={activeCircle.key} className="circle-quote">
             <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">{activeCircle.label}</div>
             <p className="font-display text-xl md:text-2xl font-semibold text-navy leading-snug">
               &ldquo;{activeCircle.quote}&rdquo;
             </p>
-          </>
+          </div>
         ) : (
           <p className="text-sm text-muted-foreground">Hover or tap a circle to read the philosophy behind each circle of the Council.</p>
         )}
