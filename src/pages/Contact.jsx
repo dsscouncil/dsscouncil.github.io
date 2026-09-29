@@ -8,6 +8,14 @@ const Instagram = ({ className }) => (
     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
   </svg>
 )
+
+const Linkedin = ({ className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect width="4" height="12" x="2" y="9" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+)
 import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
@@ -114,6 +122,20 @@ export default function Contact() {
                       <span>
                         <span className="block text-sm font-semibold text-white group-hover:text-gold transition-colors">Dubai Scholars</span>
                         <span className="block text-xs text-white/50">@dubaischolars1976</span>
+                      </span>
+                    </a>
+                    <a
+                      href="https://ae.linkedin.com/school/dubai-scholars-private-school/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-4"
+                    >
+                      <span className="h-11 w-11 shrink-0 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
+                        <Linkedin className="h-5 w-5 text-gold" />
+                      </span>
+                      <span>
+                        <span className="block text-sm font-semibold text-white group-hover:text-gold transition-colors">Dubai Scholars LinkedIn</span>
+                        <span className="block text-xs text-white/50">LinkedIn</span>
                       </span>
                     </a>
                   </div>
