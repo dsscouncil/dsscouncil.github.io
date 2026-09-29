@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react'
-import { CalendarDays, MapPin, User, Handshake, CurrencyDollar, Palette, PenTool, Dumbbell, Cpu, Mic, Users } from 'lucide-react'
+import { CalendarDays, MapPin, User, Handshake, DollarSign, Palette, PenTool, Dumbbell, Cpu, Mic, Users } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { useAdmin, YEAR_GROUPS } from '../admin/store.jsx'
 
 const KNOWN_CATEGORIES = ['Academic', 'Sports', 'Creative', 'Technology', 'Community', 'Culture', 'Leadership']
 
-const ICONS = { CurrencyDollar, Palette, PenTool, Dumbbell, Cpu, Mic, Users, Handshake }
+const ICONS = { CurrencyDollar: DollarSign, Palette, PenTool, Dumbbell, Cpu, Mic, Users, Handshake }
 const ClubIcon = ({ name }) => {
   const Icon = ICONS[name] || Handshake
   return <Icon className="h-6 w-6 text-gold" />

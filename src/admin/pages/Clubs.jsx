@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { Pencil, Trash2, Plus, Handshake, CurrencyDollar, Palette, PenTool, Dumbbell, Cpu, Mic, Users } from 'lucide-react'
+import { Pencil, Trash2, Plus, Handshake, DollarSign, Palette, PenTool, Dumbbell, Cpu, Mic, Users } from 'lucide-react'
 import { useAdmin } from '../store.jsx'
 import { Modal, PageHead, Field, inputCls } from '../ui.jsx'
 
 const CATS = ['Academic', 'Sports', 'Creative', 'Technology', 'Community', 'Culture', 'Leadership']
 const EMPTY = { name: '', description: '', category: 'Academic', schedule: '-', location: '-', leads: '-', join: '-', icon: 'Handshake' }
 
-const ICONS = { CurrencyDollar, Palette, PenTool, Dumbbell, Cpu, Mic, Users, Handshake }
+const ICONS = { CurrencyDollar: DollarSign, Palette, PenTool, Dumbbell, Cpu, Mic, Users, Handshake }
 const ClubIcon = ({ name }) => {
   const Icon = ICONS[name] || Handshake
   return <Icon className="h-4 w-4 text-gold" />
