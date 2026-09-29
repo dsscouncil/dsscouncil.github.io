@@ -13,24 +13,29 @@ const RING_STYLES = {
 }
 const DEFAULT_STYLE = RING_STYLES['House Leadership']
 
+import houseAlpha from '../assets/houses/alpha.png'
+import housePi from '../assets/houses/pi.png'
+import houseOmega from '../assets/houses/omega.png'
+import houseBeta from '../assets/houses/beta.png'
+
 const HOUSES = [
   {
-    name: 'Respect', house: 'Alpha', letter: 'Α',
+    name: 'Respect', house: 'Alpha', img: houseAlpha,
     colour: 'hsl(217 91% 60%)', soft: 'hsl(217 91% 95%)',
     desc: 'Treating every member of our community with dignity — on the field, in class and beyond.',
   },
   {
-    name: 'Compassion', house: 'Pi', letter: 'Π',
+    name: 'Compassion', house: 'Pi', img: housePi,
     colour: 'hsl(0 72% 51%)', soft: 'hsl(0 86% 96%)',
     desc: 'Leading with kindness and standing beside those who need support the most.',
   },
   {
-    name: 'Empathy', house: 'Omega', letter: 'Ω',
+    name: 'Empathy', house: 'Omega', img: houseOmega,
     colour: 'hsl(45 93% 40%)', soft: 'hsl(48 96% 93%)',
     desc: 'Listening first, understanding always — seeing the world through each other\'s eyes.',
   },
   {
-    name: 'Integrity', house: 'Beta', letter: 'Β',
+    name: 'Integrity', house: 'Beta', img: houseBeta,
     colour: 'hsl(142 71% 38%)', soft: 'hsl(142 69% 94%)',
     desc: 'Doing the right thing, especially when no one is watching.',
   },
@@ -187,12 +192,10 @@ export default function About() {
                   <div className="h-2" style={{ background: h.colour }} />
                   <div className="p-6 text-center">
                     <div
-                      className="mx-auto h-14 w-14 rounded-full flex items-center justify-center"
+                      className="mx-auto h-16 w-16 rounded-full flex items-center justify-center overflow-hidden"
                       style={{ background: h.soft }}
                     >
-                      <span className="font-display text-2xl font-bold" style={{ color: h.colour }}>
-                        {h.letter}
-                      </span>
+                      <img src={h.img} alt={`${h.house} house symbol`} className="h-11 w-11 object-contain" />
                     </div>
                     <div className="mt-4 font-display text-xl font-bold text-navy">{h.name}</div>
                     <div className="mt-1 text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: h.colour }}>
