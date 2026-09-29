@@ -13,6 +13,29 @@ const RING_STYLES = {
 }
 const DEFAULT_STYLE = RING_STYLES['House Leadership']
 
+const HOUSES = [
+  {
+    name: 'Respect', house: 'Alpha', letter: 'Α',
+    colour: 'hsl(217 91% 60%)', soft: 'hsl(217 91% 95%)',
+    desc: 'Treating every member of our community with dignity — on the field, in class and beyond.',
+  },
+  {
+    name: 'Compassion', house: 'Pi', letter: 'Π',
+    colour: 'hsl(0 72% 51%)', soft: 'hsl(0 86% 96%)',
+    desc: 'Leading with kindness and standing beside those who need support the most.',
+  },
+  {
+    name: 'Empathy', house: 'Omega', letter: 'Ω',
+    colour: 'hsl(45 93% 40%)', soft: 'hsl(48 96% 93%)',
+    desc: 'Listening first, understanding always — seeing the world through each other\'s eyes.',
+  },
+  {
+    name: 'Integrity', house: 'Beta', letter: 'Β',
+    colour: 'hsl(142 71% 38%)', soft: 'hsl(142 69% 94%)',
+    desc: 'Doing the right thing, especially when no one is watching.',
+  },
+]
+
 // Ring geometry, outermost first. Each key owns one ring regardless of store order.
 const RING_GEOMETRY = [
   { key: 'Departmental Leadership', path: 'M 5 250 A 245 245 0 1 0 495 250 A 245 245 0 1 0 5 250 Z M 45 250 A 205 205 0 1 0 455 250 A 205 205 0 1 0 45 250 Z', arc: 'arc-sports' },
@@ -147,13 +170,50 @@ export default function About() {
         </div>
       </section>
 
-      {/* Council philosophy quote */}
+      {/* The four houses */}
+      <section className="py-16 md:py-20 bg-white">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <Reveal>
+            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">House System</div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-navy">The four houses</h2>
+            <p className="mt-3 text-muted-foreground max-w-2xl">
+              Every student belongs to a house — four communities that compete, create and serve together, each guided by its own value.
+            </p>
+          </Reveal>
+          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {HOUSES.map((h, i) => (
+              <Reveal key={h.house} delay={(i % 4) * 80}>
+                <div className="h-full rounded-2xl bg-card border border-border gold-block overflow-hidden">
+                  <div className="h-2" style={{ background: h.colour }} />
+                  <div className="p-6 text-center">
+                    <div
+                      className="mx-auto h-14 w-14 rounded-full flex items-center justify-center"
+                      style={{ background: h.soft }}
+                    >
+                      <span className="font-display text-2xl font-bold" style={{ color: h.colour }}>
+                        {h.letter}
+                      </span>
+                    </div>
+                    <div className="mt-4 font-display text-xl font-bold text-navy">{h.name}</div>
+                    <div className="mt-1 text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: h.colour }}>
+                      {h.house} House
+                    </div>
+                    <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{h.desc}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* House of accountability */}
       <section className="py-16 md:py-20 bg-surface">
         <div className="mx-auto max-w-4xl px-5 lg:px-8 text-center">
           <Reveal>
             <Quote className="h-10 w-10 text-gold mx-auto" />
             <p className="mt-6 font-display text-xl md:text-2xl font-medium text-navy leading-relaxed">{sc.philosophy}</p>
-            <div className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Council Philosophy</div>
+            <div className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-gold">House of Accountability</div>
           </Reveal>
         </div>
       </section>

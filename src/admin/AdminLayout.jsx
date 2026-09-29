@@ -41,8 +41,8 @@ export default function AdminLayout() {
       <header className="sticky top-0 z-40 bg-white border-b border-border">
         <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-5 lg:px-8">
           <div className="flex items-center gap-3">
-            <Link to="/" title="Back to main website" className="inline-block h-10 w-10 overflow-hidden rounded-full bg-white">
-              <img src={LOGO} alt="Council logo — back to main website" className="h-full w-full object-contain" />
+            <Link to="/" title="Back to main website" className="inline-block h-10 w-10 rounded-lg bg-navy-deep shadow-[0_0_8px_hsl(39_53%_57%_0.35)]">
+              <img src={LOGO} alt="Council logo — back to main website" className="h-full w-full object-contain p-1" />
             </Link>
             <Link to="/admin" className="leading-tight">
               <span className="block font-display text-lg font-bold text-navy">Governor&rsquo;s Console</span>

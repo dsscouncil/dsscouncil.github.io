@@ -1,4 +1,6 @@
-export const LOGO = 'https://media.base44.com/images/public/6a9d1eb10b66aa6d58818301/2054256fd_801882105_18332527324286859_8997879390325782521_n__1_.jpg/v1/fit/w_112,h_112,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/2054256fd_801882105_18332527324286859_8997879390325782521_n.webp'
+import logoUrl from '../assets/logo.png'
+
+export const LOGO = logoUrl
 
 export const IMG = {
   hero: 'https://media.base44.com/images/public/6a9d1eb10b66aa6d58818301/b297102f1_skl.jpg/v1/fill/w_822,h_1260,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/b297102f1_skl.webp',
@@ -88,7 +90,7 @@ export const newsArticles = [
     id: 1,
     cat: 'Announcement',
     title: 'Welcome to the 2026–27 Student Council Website',
-    excerpt: "Hello Everyone! My name is Burhanuddin and I am the IT Coordinator for this year as well as this website's author! I am looking forward to s",
+    excerpt: "Hello Everyone! My name is Burhanuddin and I am the IT Coordinator for this year as well as this website's author! I am looking forward to serve you guys especially in this special 50th student council.",
     date: '1 September 2026',
     author: 'Burhanuddin',
     featured: true,
@@ -103,13 +105,13 @@ export const newsArticles = [
 export const newsCategories = ['All', 'Announcement', 'Project Update', 'Event Recap', 'Achievement', 'Campaign', 'Student Opportunity']
 
 export const clubs = [
-  { cat: 'Academic', name: 'Financial Literacy', desc: 'To equip students with knowledge in money management, investing, and personal finance to build long-term wealth and responsible economic habits.', schedule: '-', location: '-', leads: '-', join: '-' },
-  { cat: 'Creative', name: 'Made by Scholars', desc: 'Develop skills to create items.', schedule: '-', location: '-', leads: '-', join: '-' },
-  { cat: 'Academic', name: 'Marketing and Branding', desc: 'To introduce students to the principles of modern marketing, consumer psychology, and how to build a compelling personal or business brand.', schedule: '-', location: '-', leads: '-', join: '-' },
-  { cat: 'Sports', name: 'Martial Arts', desc: 'To foster physical fitness, self-discipline, respect, and self-defense skills through a structured, non-contact/light-contact martial arts curriculum.', schedule: '-', location: '-', leads: '-', join: '-' },
-  { cat: 'Technology', name: 'MindCraft', desc: 'Build, and play Minecraft: Education while learning engineering and coding skills.', schedule: 'Tuesdays, Thursdays', location: '-', leads: 'Amit, Arjun, Burhanuddin', join: '-' },
-  { cat: 'Leadership', name: 'Podcast (Photography and Editing)', desc: 'To teach students technical and creative skills required to produce, edit, and market high-quality digital media, combining audio storytelling with visual branding.', schedule: '-', location: '-', leads: '-', join: '-' },
-  { cat: 'Leadership', name: 'Public Speaking', desc: 'Learn how to conquer stage fright and be able to confidently speak in front of anyone!', schedule: '-', location: '-', leads: '-', join: '-' },
+  { cat: 'Academic', name: 'Financial Literacy', desc: 'To equip students with knowledge in money management, investing, and personal finance to build long-term wealth and responsible economic habits.', icon: 'CurrencyDollar', schedule: '-', location: '-', leads: '-', join: '-' },
+  { cat: 'Creative', name: 'Made by Scholars', desc: 'Develop skills to create items.', icon: 'Palette', schedule: '-', location: '-', leads: '-', join: '-' },
+  { cat: 'Academic', name: 'Marketing and Branding', desc: 'To introduce students to the principles of modern marketing, consumer psychology, and how to build a compelling personal or business brand.', icon: 'PenTool', schedule: '-', location: '-', leads: '-', join: '-' },
+  { cat: 'Sports', name: 'Martial Arts', desc: 'To foster physical fitness, self-discipline, respect, and self-defense skills through a structured, non-contact/light-contact martial arts curriculum.', icon: 'Dumbbell', schedule: '-', location: '-', leads: '-', join: '-' },
+  { cat: 'Technology', name: 'MindCraft', desc: 'Build, and play Minecraft: Education while learning engineering and coding skills.', icon: 'Cpu', schedule: 'Tuesdays, Thursdays', location: '-', leads: 'Amit, Arjun, Burhanuddin', join: '-' },
+  { cat: 'Leadership', name: 'Podcast (Photography and Editing)', desc: 'To teach students technical and creative skills required to produce, edit, and market high-quality digital media, combining audio storytelling with visual branding.', icon: 'Mic', schedule: '-', location: '-', leads: '-', join: '-' },
+  { cat: 'Leadership', name: 'Public Speaking', desc: 'Learn how to conquer stage fright and be able to confidently speak in front of anyone!', icon: 'Users', schedule: '-', location: '-', leads: '-', join: '-' },
 ]
 
 export const clubCategories = ['All', 'Academic', 'Sports', 'Creative', 'Technology', 'Community', 'Culture', 'Leadership']

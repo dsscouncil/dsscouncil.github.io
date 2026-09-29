@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Pencil, Trash2, Plus, Star } from 'lucide-react'
+import { Pencil, Trash2, Plus, Star, Globe, EyeOff } from 'lucide-react'
 import { useAdmin } from '../store.jsx'
 import { Modal, PageHead, StatusPill, Field, inputCls } from '../ui.jsx'
 
@@ -36,7 +36,7 @@ export default function News() {
                 <span className="rounded-full bg-blue-50 border border-blue-200 px-3 py-1 text-xs font-semibold text-blue-700">{n.category}</span>
                 {n.featured && <span className="rounded-full bg-gold px-3 py-1 text-xs font-bold uppercase tracking-wide text-navy">Featured</span>}
               </div>
-              <StatusPill status="Completed" />
+              <StatusPill status={n.status} />
             </div>
             <h3 className="mt-3 font-display text-xl font-bold text-navy">{n.title}</h3>
             <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">{n.excerpt}</p>
@@ -49,7 +49,7 @@ export default function News() {
                 <Pencil className="h-3.5 w-3.5" /> Edit
               </button>
               <button onClick={() => update('news', n.id, { featured: !n.featured })} className="rounded-full border border-border px-4 py-2 text-xs font-semibold text-navy/70 hover:border-gold hover:text-navy transition-colors">
-                {n.featured ? 'Unfeature' : 'Feature'}
+                {n.featured ? <Globe className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />} {n.featured ? 'Unfeature' : 'Feature'}
               </button>
               <button onClick={() => setConfirmId(n.id)} className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-red-50 px-4 py-2 text-xs font-semibold text-red-500 hover:bg-red-100 transition-colors">
                 <Trash2 className="h-3.5 w-3.5" /> Delete

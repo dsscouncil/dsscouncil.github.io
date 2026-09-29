@@ -1,10 +1,16 @@
 import { useMemo, useState } from 'react'
-import { CalendarDays, MapPin, User, Handshake } from 'lucide-react'
+import { CalendarDays, MapPin, User, Handshake, CurrencyDollar, Palette, PenTool, Dumbbell, Cpu, Mic, Users } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { useAdmin, YEAR_GROUPS } from '../admin/store.jsx'
 
 const KNOWN_CATEGORIES = ['Academic', 'Sports', 'Creative', 'Technology', 'Community', 'Culture', 'Leadership']
+
+const ICONS = { CurrencyDollar, Palette, PenTool, Dumbbell, Cpu, Mic, Users, Handshake }
+const ClubIcon = ({ name }) => {
+  const Icon = ICONS[name] || Handshake
+  return <Icon className="h-6 w-6 text-gold" />
+}
 export default function Clubs() {
   const { data } = useAdmin()
   const [cat, setCat] = useState('All')
@@ -47,7 +53,7 @@ export default function Clubs() {
                 <div className="group h-full rounded-2xl bg-card border border-border gold-block p-6">
                   <div className="flex items-start justify-between mb-3">
                     <div className="h-12 w-12 rounded-xl bg-navy flex items-center justify-center">
-                      <Handshake className="h-6 w-6 text-gold" />
+                      <ClubIcon name={club.icon} />
                     </div>
                     <span className="rounded-full bg-surface px-3 py-1 text-xs font-semibold text-navy">{club.category}</span>
                   </div>

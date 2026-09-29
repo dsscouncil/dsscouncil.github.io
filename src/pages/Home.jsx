@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, MessageCircle } from 'lucide-react'
+import { ArrowRight, MessageCircle, ExternalLink } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
-import { IMG } from '../data/content.js'
+import { IMG, LOGO } from '../data/content.js'
 import { useAdmin } from '../admin/store.jsx'
 
 export default function Home() {
@@ -180,6 +180,35 @@ export default function Home() {
               <Link to="/student-voice" className="mt-7 inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3.5 text-sm font-semibold text-navy hover:bg-gold-soft transition-colors">
                 Share Your Voice
               </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* School website */}
+      <section className="pb-20 md:pb-28">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <Reveal>
+            <div className="rounded-3xl bg-navy-deep text-white p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-12 gold-outline">
+              <div className="shrink-0 h-24 w-24 rounded-2xl bg-white/5 ring-1 ring-white/10 flex items-center justify-center">
+                <img src={LOGO} alt="Dubai Scholars Private School" className="h-16 w-16 object-contain" />
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">Our School</div>
+                <h3 className="font-display text-2xl md:text-3xl font-bold">Proudly part of the Dubai Scholars family.</h3>
+                <p className="mt-3 text-white/60 max-w-xl leading-relaxed">
+                  The Student Council is one of many ways students lead at Dubai Scholars. Explore admissions, academics and campus life on the official school website.
+                </p>
+              </div>
+              <a
+                href="https://dubaischolars.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group shrink-0 inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3.5 text-sm font-semibold text-navy hover:bg-gold-soft transition-colors"
+              >
+                Visit dubaischolars.com
+                <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
             </div>
           </Reveal>
         </div>

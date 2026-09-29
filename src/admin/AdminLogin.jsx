@@ -31,9 +31,9 @@ export default function AdminLogin() {
     <div className="flex min-h-screen items-center justify-center bg-navy-deep px-5 py-16">
       <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
         <div className="flex flex-col items-center text-center">
-          <span className="h-16 w-16 overflow-hidden rounded-full bg-white ring-1 ring-border">
-            <img src={LOGO} alt="Council logo" className="h-full w-full object-contain" />
-          </span>
+          <div className="h-16 w-16 overflow-hidden rounded-full bg-navy-deep shadow-[0_0_12px_hsl(39_53%_57%_0.35)]">
+            <img src={LOGO} alt="Council logo" className="h-full w-full object-contain p-1.5" />
+          </div>
           <h1 className="mt-4 font-display text-3xl font-bold text-navy">Governor&rsquo;s Console</h1>
           <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-muted-foreground">Council Admin</p>
           <p className="mt-3 text-sm text-muted-foreground">Council admin sign in.</p>

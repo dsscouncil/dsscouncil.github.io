@@ -11,12 +11,14 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-5 lg:px-8 py-14">
         <div className="grid gap-12 md:grid-cols-3">
           <div>
-            <img
-              src={LOGO}
-              alt="Dubai Scholars Student Council"
-              referrerPolicy="no-referrer"
-              className="h-16 w-16 object-contain"
-            />
+            <div className="relative h-16 w-16 rounded-2xl bg-navy-deep shadow-[0_0_16px_hsl(39_53%_57%_0.35)]">
+              <img
+                src={LOGO}
+                alt="Dubai Scholars Student Council"
+                referrerPolicy="no-referrer"
+                className="h-full w-full object-contain p-2"
+              />
+            </div>
             <p className="mt-4 font-display text-lg font-semibold">&ldquo;By the Students. From the Students. For the Students.&rdquo;</p>
             <a
               href={`mailto:${email}`}

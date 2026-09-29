@@ -1,10 +1,16 @@
 import { useState } from 'react'
-import { Pencil, Trash2, Plus } from 'lucide-react'
+import { Pencil, Trash2, Plus, Handshake, CurrencyDollar, Palette, PenTool, Dumbbell, Cpu, Mic, Users } from 'lucide-react'
 import { useAdmin } from '../store.jsx'
 import { Modal, PageHead, Field, inputCls } from '../ui.jsx'
 
 const CATS = ['Academic', 'Sports', 'Creative', 'Technology', 'Community', 'Culture', 'Leadership']
-const EMPTY = { name: '', description: '', category: 'Academic', schedule: '-', location: '-', leads: '-', join: '-' }
+const EMPTY = { name: '', description: '', category: 'Academic', schedule: '-', location: '-', leads: '-', join: '-', icon: 'Handshake' }
+
+const ICONS = { CurrencyDollar, Palette, PenTool, Dumbbell, Cpu, Mic, Users, Handshake }
+const ClubIcon = ({ name }) => {
+  const Icon = ICONS[name] || Handshake
+  return <Icon className="h-4 w-4 text-gold" />
+}
 
 export default function Clubs() {
   const { data, add, update, remove } = useAdmin()
@@ -23,7 +29,12 @@ export default function Clubs() {
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {data.clubs.map((c) => (
           <div key={c.id} className="rounded-3xl border border-border bg-white p-6">
-            <span className="rounded-full bg-surface px-3 py-1 text-xs font-semibold text-navy">{c.category}</span>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="h-8 w-8 rounded-lg bg-navy flex items-center justify-center text-gold text-sm font-semibold">
+                <ClubIcon name={c.icon} />
+              </span>
+              <span className="rounded-full bg-surface px-3 py-1 text-xs font-semibold text-navy">{c.category}</span>
+            </div>
             <h3 className="mt-3 font-display text-lg font-bold text-navy">{c.name}</h3>
             <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">{c.description}</p>
             <div className="mt-5 flex gap-2">

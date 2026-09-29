@@ -22,12 +22,14 @@ export default function Header() {
       <nav className="mx-auto max-w-7xl px-5 lg:px-8">
         <div className="flex h-20 py-3 items-center justify-between">
           <Link to="/" className="flex items-center group" aria-label="Dubai Scholars Student Council">
-            <img
-              src={LOGO}
-              alt="Dubai Scholars Student Council"
-              referrerPolicy="no-referrer"
-              className="h-14 w-14 object-contain"
-            />
+            <div className="relative h-14 w-14 rounded-xl bg-navy-deep shadow-[0_0_12px_hsl(39_53%_57%_0.35)]">
+              <img
+                src={LOGO}
+                alt="Dubai Scholars Student Council"
+                referrerPolicy="no-referrer"
+                className="h-full w-full object-contain p-1.5"
+              />
+            </div>
           </Link>
 
           {/* Desktop nav */}

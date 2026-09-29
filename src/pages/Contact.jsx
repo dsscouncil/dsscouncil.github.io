@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Mail, MessageCircle, Send } from 'lucide-react'
+import { Mail, MessageCircle, Send, Instagram } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
@@ -74,6 +74,40 @@ export default function Contact() {
                     <Link to="/student-voice" className="mt-1 block text-sm font-semibold text-white hover:text-gold transition-colors">
                       Submit ideas via the Student Voice page
                     </Link>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-wide text-white/50">Follow Us</div>
+                  <div className="mt-3 space-y-3">
+                    <a
+                      href="https://www.instagram.com/dsstudentcouncil"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-4"
+                    >
+                      <span className="h-11 w-11 shrink-0 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
+                        <Instagram className="h-5 w-5 text-gold" />
+                      </span>
+                      <span>
+                        <span className="block text-sm font-semibold text-white group-hover:text-gold transition-colors">Dubai Scholars Student Council</span>
+                        <span className="block text-xs text-white/50">@dsstudentcouncil</span>
+                      </span>
+                    </a>
+                    <a
+                      href="https://www.instagram.com/dubaischolars1976"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-4"
+                    >
+                      <span className="h-11 w-11 shrink-0 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
+                        <Instagram className="h-5 w-5 text-gold" />
+                      </span>
+                      <span>
+                        <span className="block text-sm font-semibold text-white group-hover:text-gold transition-colors">Dubai Scholars</span>
+                        <span className="block text-xs text-white/50">@dubaischolars1976</span>
+                      </span>
+                    </a>
                   </div>
                 </div>
               </div>

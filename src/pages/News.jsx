@@ -81,6 +81,10 @@ export default function News() {
                       <span className="inline-flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5 text-gold" />{a.date}</span>
                       <span className="inline-flex items-center gap-1.5"><User className="h-3.5 w-3.5 text-gold" />{a.author}</span>
                     </div>
+                    <button onClick={(e) => { e.stopPropagation(); setOpenId(a.id) }} className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-gold/80 transition-colors group-hover:gap-3">
+                      Read full announcement
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </button>
                   </div>
                 </button>
               </Reveal>

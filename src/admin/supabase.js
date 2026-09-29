@@ -30,11 +30,11 @@ const toInitiative = (i) => ({ id: i.id || uid(), title: i.title, description: i
 const mapEvent = (r) => ({ id: r.id, title: r.title, day: r.day, month: r.month, type: r.type, location: r.location || '', org: r.org || '', description: r.description || '', order: r.sort ?? 0 })
 const toEvent = (e) => ({ id: e.id || uid(), title: e.title, day: e.day, month: e.month, type: e.type, location: e.location || '', org: e.org || '', description: e.description || '', sort: e.order ?? 0 })
 
-const mapClub = (r) => ({ id: r.id, name: r.name, description: r.description, category: r.category, schedule: r.schedule, location: r.location, leads: r.leads, join: r.join_info, order: r.sort ?? 0 })
-const toClub = (c) => ({ id: c.id || uid(), name: c.name, description: c.description, category: c.category, schedule: c.schedule, location: c.location, leads: c.leads, join_info: c.join, sort: c.order ?? 0 })
+const mapClub = (r) => ({ id: r.id, name: r.name, description: r.description, category: r.category, schedule: r.schedule, location: r.location, leads: r.leads, join: r.join_info, icon: r.icon || 'Handshake', order: r.sort ?? 0 })
+const toClub = (c) => ({ id: c.id || uid(), name: c.name, description: c.description, category: c.category, schedule: c.schedule, location: c.location, leads: c.leads, join_info: c.join, icon: c.icon || 'Handshake', sort: c.order ?? 0 })
 
-const mapNews = (r) => ({ id: r.id, title: r.title, excerpt: r.excerpt, body: (r.body || '').split('\n'), category: r.category, date: r.date_label || '', author: r.author || '', featured: r.featured, order: r.sort ?? 0 })
-const toNews = (n) => ({ id: n.id || uid(), title: n.title, excerpt: n.excerpt, body: Array.isArray(n.body) ? n.body.join('\n') : (n.body || ''), category: n.category, date_label: n.date || '', author: n.author || '', featured: !!n.featured, sort: n.order ?? 0 })
+const mapNews = (r) => ({ id: r.id, title: r.title, excerpt: r.excerpt, body: (r.body || '').split('\n'), category: r.category, date: r.date_label || '', author: r.author || '', featured: r.featured, status: r.status || 'Draft', order: r.sort ?? 0 })
+const toNews = (n) => ({ id: n.id || uid(), title: n.title, excerpt: n.excerpt, body: Array.isArray(n.body) ? n.body.join('\n') : (n.body || ''), category: n.category, date_label: n.date || '', author: n.author || '', featured: !!n.featured, status: n.status || 'Draft', sort: n.order ?? 0 })
 
 const mapDocument = (r) => ({ id: r.id, title: r.title, description: r.description, category: r.category, url: r.url || '', order: r.sort ?? 0 })
 const toDocument = (d) => ({ id: d.id || uid(), title: d.title, description: d.description, category: d.category, url: d.url || '', sort: d.order ?? 0 })
