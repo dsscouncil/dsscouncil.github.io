@@ -3,6 +3,7 @@ import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { AdminProvider, useAdmin } from './admin/store.jsx'
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
+import AmbientSound from './components/AmbientSound.jsx'
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
 import Council from './pages/Council.jsx'
@@ -94,6 +95,7 @@ function Site() {
     <div className="min-h-screen flex flex-col">
       <ScrollToTop />
       <Header />
+      <AmbientSound />
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Home />} />
