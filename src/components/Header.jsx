@@ -20,7 +20,6 @@ export default function Header() {
 
   return (
     <header className={`fixed top-0 inset-x-0 z-50 bg-white transition-shadow duration-300 ${scrolled ? 'shadow-sm' : ''}`}>
-      <Ticker />
       <nav className="mx-auto max-w-7xl px-5 lg:px-8">
         <div className="flex h-20 py-3 items-center justify-between">
           <Link to="/" className="flex items-center group" aria-label="Dubai Scholars Student Council">
@@ -67,6 +66,7 @@ export default function Header() {
           </div>
         </div>
       </nav>
+      <Ticker />
 
       {/* Mobile menu */}
       {open && (
