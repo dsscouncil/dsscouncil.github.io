@@ -20,7 +20,7 @@ export default function AmbientSound() {
   })
 
   useEffect(() => {
-    const el = new Audio('./audio/ambient-loop-v2.m4a')
+    const el = new Audio('./audio/ambient-loop-v3.m4a')
     el.loop = true
     el.volume = 0.35
     el.preload = 'auto'
