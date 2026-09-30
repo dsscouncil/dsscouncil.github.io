@@ -13,7 +13,6 @@ The Council platform — public site + **Governor's Console** admin dashboard, b
 - Vite + React 19 + Tailwind CSS v4
 - react-router-dom (HashRouter — works on any static host)
 - @supabase/supabase-js
-- Supabase project: `dsscouncil` (ap-south-1) — `https://tguvcfpqjiedvpfkrinr.supabase.co`
 
 ## Run locally
 
