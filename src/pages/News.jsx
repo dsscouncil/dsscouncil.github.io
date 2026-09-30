@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { CalendarDays, User, Search, X } from 'lucide-react'
+import { ArrowRight, CalendarDays, User, Search, X } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { useAdmin } from '../admin/store.jsx'

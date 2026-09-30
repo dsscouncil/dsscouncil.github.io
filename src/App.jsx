@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, Component } from 'react'
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { AdminProvider, useAdmin } from './admin/store.jsx'
 import Header from './components/Header.jsx'
@@ -35,6 +35,50 @@ function ScrollToTop() {
     window.scrollTo(0, 0)
   }, [pathname])
   return null
+}
+
+/** Keeps one broken page from blanking the whole app. */
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { error: null }
+  }
+  static getDerivedStateFromError(error) {
+    return { error }
+  }
+  componentDidCatch(error, info) {
+    console.error('Page crashed:', error, info)
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-surface px-5">
+          <div className="max-w-md rounded-3xl bg-white border border-border p-8 text-center">
+            <h2 className="font-display text-2xl font-bold text-navy">Something went wrong</h2>
+            <p className="mt-2 text-sm text-muted-foreground">This page hit an unexpected error. The rest of the site is still available.</p>
+            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+              <button
+                onClick={() => this.setState({ error: null })}
+                className="rounded-full bg-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors"
+              >
+                Try again
+              </button>
+              <button
+                onClick={() => {
+                  this.setState({ error: null })
+                  window.location.hash = '#/'
+                }}
+                className="rounded-full border border-border px-6 py-2.5 text-sm font-semibold text-navy hover:border-gold transition-colors"
+              >
+                Back to Home
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    return this.props.children
+  }
 }
 
 function Loading() {
@@ -119,11 +163,13 @@ function Site() {
 export default function App() {
   return (
     <AdminProvider>
-      <ScrollToTop />
-      <Routes>
+      <ErrorBoundary>
+        <ScrollToTop />
+        <Routes>
         <Route path="/admin/*" element={<AdminGate />} />
         <Route path="*" element={<Site />} />
-      </Routes>
+        </Routes>
+      </ErrorBoundary>
     </AdminProvider>
   )
 }
