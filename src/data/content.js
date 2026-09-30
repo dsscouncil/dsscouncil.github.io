@@ -97,7 +97,7 @@ export const newsArticles = [
     body: [
       "Hello Everyone! My name is Burhanuddin and I am the IT Coordinator for this year as well as this website's author! I am looking forward to serve you guys especially in this special 50th student council.",
       'I am really excited to see what this year brings. :)',
-      'By the Students. From the Students. For the Students.',
+      'We Don\'t Just Represent. We Deliver.',
     ],
   },
 ]

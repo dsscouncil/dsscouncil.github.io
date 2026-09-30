@@ -19,7 +19,7 @@ export default function Footer() {
                 className="h-full w-full object-contain p-2"
               />
             </div>
-            <p className="mt-4 font-display text-lg font-semibold">&ldquo;By the Students. From the Students. For the Students.&rdquo;</p>
+            <p className="mt-4 font-display text-lg font-semibold">&ldquo;We Don&rsquo;t Just Represent. We Deliver.&rdquo;</p>
             <a
               href={`mailto:${email}`}
               className="mt-4 inline-flex items-center gap-2 text-sm text-white/70 hover:text-gold transition-colors"
