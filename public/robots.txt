@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ds-pulse.com/sitemap.xml
+Sitemap: https://www.ds-pulse.com/sitemap.xml
