@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Mail } from 'lucide-react'
 import { LOGO, footerLinks } from '../data/content.js'
 import { useAdmin } from '../admin/store.jsx'
+import PulseMark from './PulseMark.jsx'
 
 export default function Footer() {
   const { data } = useAdmin()
@@ -19,7 +20,10 @@ export default function Footer() {
                 className="h-full w-full object-contain p-2"
               />
             </div>
-            <p className="mt-4 font-display text-lg font-semibold">&ldquo;We Don&rsquo;t Just Represent. We Deliver.&rdquo;</p>
+            <div className="mt-4 font-display text-lg font-semibold leading-snug">
+              <PulseMark />
+            </div>
+            <p className="mt-2 text-sm text-white/60">&ldquo;We Don&rsquo;t Just Represent. We Deliver.&rdquo;</p>
             <a
               href={`mailto:${email}`}
               className="mt-4 inline-flex items-center gap-2 text-sm text-white/70 hover:text-gold transition-colors"

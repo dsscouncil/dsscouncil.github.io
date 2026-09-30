@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, MessageCircle, ExternalLink } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
+import PulseMark from '../components/PulseMark.jsx'
 import { IMG, LOGO } from '../data/content.js'
 import { useAdmin } from '../admin/store.jsx'
 
@@ -24,8 +25,8 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-5 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
           <Reveal>
             <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-6">{sc.heroEyebrow}</div>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.08] text-white">
-              {sc.heroTitleTop}<br />{sc.heroTitleMid}<br /><span className="text-gold">{sc.heroTitleGold}</span>
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.06] text-white">
+              <PulseMark />
             </h1>
             <p className="mt-6 text-xl font-medium text-white/80">{sc.heroSub}</p>
             <p className="mt-4 text-lg text-white/60 max-w-xl leading-relaxed">{sc.heroDesc}</p>
