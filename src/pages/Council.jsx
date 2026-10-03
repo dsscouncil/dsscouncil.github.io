@@ -3,11 +3,12 @@ import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { useAdmin, MEMBER_CATEGORIES } from '../admin/store.jsx'
 
-// Heads and their coordinators belong together on the grid. Role titles are free
-// text, so the pair is derived from the title: "Head of IT" and "IT Coordinator"
-// both reduce to "it". The coordinator match is deliberately loose because the
-// live data contains a misspelling ("Coordiantor"); anything with no partner is
-// left exactly where it was.
+// People who work together belong next to each other on the grid, and the most
+// senior of them first. Role titles are free text, so the team is derived from
+// the title: "Head of IT" and "IT Coordinator" both reduce to "it". The
+// coordinator match is deliberately loose because the live data contains a
+// misspelling ("Coordiantor"); anything with no team is left exactly where it
+// was.
 function departmentKey(role) {
   const r = (role || '').toLowerCase().replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim()
   const head = r.match(/^head of (.+)$/)
@@ -16,35 +17,53 @@ function departmentKey(role) {
   return coord ? coord[1] : null
 }
 
-function isHead(role) {
-  return /^head of /i.test(role || '')
+// The Sports Council is really two teams, Sports and Fitness.
+function councilKey(role) {
+  const r = (role || '').toLowerCase()
+  if (r.includes('fitness')) return 'fitness'
+  if (r.includes('sport')) return 'sports'
+  return null
 }
 
-// Keeps the original ordering untouched, except that the first tile of each
-// department is immediately followed by that department's other members,
-// head first. Departments stay in the order they already appeared in.
-function pairDepartments(list) {
-  const base = list
+// House Leadership teams are the houses themselves; everywhere else the team is
+// the department named in the role.
+function teamKey(cat, m) {
+  if (cat === 'House Leadership') return (m.house || '').trim() || null
+  if (cat === 'Sports Council') return councilKey(m.role)
+  return departmentKey(m.role)
+}
+
+// Captain / President / Head outrank Deputy Captain and Coordinator.
+function seniority(role) {
+  const r = (role || '').toLowerCase()
+  const deputy = /^deputy/.test(r) ? 1 : 0
+  const leader = /(captain|president|head)/.test(r) ? 0 : 1
+  return leader * 2 + deputy
+}
+
+// Keeps the original ordering untouched, except that the first tile of each team
+// is immediately followed by that team's remaining members, most senior first.
+// Teams stay in the order they already appeared in.
+function groupTeams(cat, list) {
   const buckets = new Map()
-  for (const m of base) {
-    const key = departmentKey(m.role)
+  for (const m of list) {
+    const key = teamKey(cat, m)
     if (!key) continue
-    const b = buckets.get(key) || { heads: [], others: [] }
-    ;(isHead(m.role) ? b.heads : b.others).push(m)
+    const b = buckets.get(key) || []
+    b.push(m)
     buckets.set(key, b)
   }
   const placed = new Set()
   const out = []
-  for (const m of base) {
-    const key = departmentKey(m.role)
+  for (const m of list) {
+    const key = teamKey(cat, m)
     if (!key) {
       out.push(m)
       continue
     }
     if (placed.has(key)) continue
     placed.add(key)
-    const b = buckets.get(key)
-    out.push(...b.heads, ...b.others)
+    out.push(...[...buckets.get(key)].sort((a, b) => seniority(a.role) - seniority(b.role)))
   }
   return out
 }
@@ -101,7 +120,7 @@ export default function Council() {
     const order = (m) => (m.order ?? Number.MAX_SAFE_INTEGER)
     return Object.entries(byCat).map(([cat, list]) => [
       cat,
-      pairDepartments([...list].sort((a, b) => (a.tier ?? b.tier ?? 0) - (b.tier ?? a.tier ?? 0) || order(a) - order(b))),
+      groupTeams(cat, [...list].sort((a, b) => (a.tier ?? b.tier ?? 0) - (b.tier ?? a.tier ?? 0) || order(a) - order(b))),
     ])
   }, [data.members, filter])
 
