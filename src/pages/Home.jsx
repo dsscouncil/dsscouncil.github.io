@@ -134,7 +134,7 @@ export default function Home() {
           <Reveal>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">Featured Initiatives</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-ink mb-3">Featured Initiatives</div>
                 <h2 className="font-display text-3xl md:text-4xl font-bold text-navy">Projects shaping our school</h2>
               </div>
               <Link to="/initiatives" className="inline-flex items-center gap-2 text-sm font-semibold text-navy hover:text-gold transition-colors group">
