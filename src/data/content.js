@@ -2,14 +2,26 @@ import logoUrl from '../assets/logo.png'
 
 export const LOGO = logoUrl
 
-// NOTE: request each image at its NATIVE pixel size. The `fill/...al_c`
-// transform centre-crops to the requested box, which cropped these landscape
-// photos down to portrait slices and made them look zoomed in. Matching the
-// native dimensions leaves the whole frame visible; the frames in Home.jsx use
-// matching `aspect-*` classes so the image is displayed uncropped.
+const CDN = 'https://media.base44.com/images/public/6a9d1eb10b66aa6d58818301'
+const src = (file, w, h, q = 80) =>
+  `${CDN}/${file}/v1/fill/w_${w},h_${h},q_${q},usm_0.66_1.00_0.01,enc_webp,quality_auto/${file}.webp`
+
+// Two rules keep these photos correct and light:
+//  1. Every width is requested at the photo's NATIVE aspect ratio. base44's
+//     `fill/...al_c` transform centre-crops to the requested box, so asking for
+//     a portrait box turned these landscape photos into zoomed-in slices.
+//  2. Each photo is offered at several widths via srcSet, so a phone downloads
+//     ~58 KB instead of the 274 KB full-size file. The frames in Home.jsx use
+//     matching `aspect-*` classes so the image is still displayed uncropped.
 export const IMG = {
-  hero: 'https://media.base44.com/images/public/6a9d1eb10b66aa6d58818301/b297102f1_skl.jpg/v1/fill/w_1500,h_1000,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/b297102f1_skl.webp',
-  about: 'https://media.base44.com/images/public/6a9d1eb10b66aa6d58818301/afb4cd38f_DS-small.jpg/v1/fill/w_1260,h_900,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/afb4cd38f_DS-small.webp',
+  hero: src('b297102f1_skl.jpg', 1500, 1000, 90),
+  heroSrcSet: [src('b297102f1_skl.jpg', 800, 533), src('b297102f1_skl.jpg', 1200, 800), src('b297102f1_skl.jpg', 1500, 1000, 90)]
+    .map((u, i) => `${u} ${[800, 1200, 1500][i]}w`)
+    .join(', '),
+  about: src('afb4cd38f_DS-small.jpg', 1260, 900, 90),
+  aboutSrcSet: [src('afb4cd38f_DS-small.jpg', 600, 429), src('afb4cd38f_DS-small.jpg', 900, 643), src('afb4cd38f_DS-small.jpg', 1260, 900, 90)]
+    .map((u, i) => `${u} ${[600, 900, 1260][i]}w`)
+    .join(', '),
 }
 
 export const navLinks = [

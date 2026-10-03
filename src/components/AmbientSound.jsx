@@ -23,7 +23,11 @@ export default function AmbientSound() {
     const el = new Audio('./audio/ambient-loop-v3.m4a')
     el.loop = true
     el.volume = 0.35
-    el.preload = 'auto'
+    // 'none' keeps the 1.2 MB track off the critical path: the browser only
+    // fetches it once play() is called, which happens on the visitor's first
+    // interaction. With 'auto' Chrome downloaded the whole file on every page
+    // load even though playback was blocked until then.
+    el.preload = 'none'
     audioRef.current = el
     return () => {
       el.pause()

@@ -1,4 +1,4 @@
-import { useEffect, Component } from 'react'
+import { useEffect, Component, lazy, Suspense } from 'react'
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { AdminProvider, useAdmin } from './admin/store.jsx'
 import Header from './components/Header.jsx'
@@ -14,20 +14,23 @@ import Clubs from './pages/Clubs.jsx'
 import News from './pages/News.jsx'
 import Documents from './pages/Documents.jsx'
 import Contact from './pages/Contact.jsx'
-import AdminLogin from './admin/AdminLogin.jsx'
-import AdminLayout from './admin/AdminLayout.jsx'
-import AdminOverview from './admin/pages/Overview.jsx'
-import AdminVoice from './admin/pages/Voice.jsx'
-import AdminContactMessages from './admin/pages/ContactMessages.jsx'
-import AdminMembers from './admin/pages/Members.jsx'
-import AdminInitiatives from './admin/pages/Initiatives.jsx'
-import AdminEvents from './admin/pages/Events.jsx'
-import AdminClubs from './admin/pages/Clubs.jsx'
-import AdminNews from './admin/pages/News.jsx'
-import AdminDocuments from './admin/pages/Documents.jsx'
-import AdminCircleQuotes from './admin/pages/CircleQuotes.jsx'
-import AdminMessages from './admin/pages/LeadershipMessages.jsx'
-import AdminSettings from './admin/pages/Settings.jsx'
+
+// The admin dashboard is only ever used by council staff, so it is split into
+// its own chunk instead of being downloaded by every public visitor.
+const AdminLogin = lazy(() => import('./admin/AdminLogin.jsx'))
+const AdminLayout = lazy(() => import('./admin/AdminLayout.jsx'))
+const AdminOverview = lazy(() => import('./admin/pages/Overview.jsx'))
+const AdminVoice = lazy(() => import('./admin/pages/Voice.jsx'))
+const AdminContactMessages = lazy(() => import('./admin/pages/ContactMessages.jsx'))
+const AdminMembers = lazy(() => import('./admin/pages/Members.jsx'))
+const AdminInitiatives = lazy(() => import('./admin/pages/Initiatives.jsx'))
+const AdminEvents = lazy(() => import('./admin/pages/Events.jsx'))
+const AdminClubs = lazy(() => import('./admin/pages/Clubs.jsx'))
+const AdminNews = lazy(() => import('./admin/pages/News.jsx'))
+const AdminDocuments = lazy(() => import('./admin/pages/Documents.jsx'))
+const AdminCircleQuotes = lazy(() => import('./admin/pages/CircleQuotes.jsx'))
+const AdminMessages = lazy(() => import('./admin/pages/LeadershipMessages.jsx'))
+const AdminSettings = lazy(() => import('./admin/pages/Settings.jsx'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -137,7 +140,6 @@ function Site() {
   if (error || !data) return <DbError message={error || 'Unknown error'} onRetry={refresh} />
   return (
     <div className="min-h-screen flex flex-col">
-      <ScrollToTop />
       <Header />
       <AmbientSound />
       <main className="flex-1">
@@ -166,7 +168,7 @@ export default function App() {
       <ErrorBoundary>
         <ScrollToTop />
         <Routes>
-        <Route path="/admin/*" element={<AdminGate />} />
+        <Route path="/admin/*" element={<Suspense fallback={<Loading />}><AdminGate /></Suspense>} />
         <Route path="*" element={<Site />} />
         </Routes>
       </ErrorBoundary>
