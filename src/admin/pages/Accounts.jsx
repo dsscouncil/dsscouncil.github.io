@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { ShieldCheck, UserPlus, Trash2, KeyRound, Pencil, Users } from 'lucide-react'
 import { useAdmin } from '../store.jsx'
-import { Modal, PageHead, Field, inputCls } from '../ui.jsx'
+import { Modal, Field, inputCls } from '../ui.jsx'
 
 const ROLES = [
   { value: 'super', label: 'Super', hint: 'Can edit the site and manage every other account.' },
@@ -54,11 +54,14 @@ export default function Accounts() {
   )
 
   return (
-    <div>
-      <PageHead
-        title="Admin Accounts"
-        sub="Super accounts can edit the site and issue or change every other account. Only Super accounts can see this page."
-      >
+    <div className="rounded-3xl border border-border bg-white p-7">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h2 className="font-display text-2xl font-bold text-navy">Admin Accounts</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Issue new logins or change what existing ones can do. Super accounts can edit the site and manage every other account.
+          </p>
+        </div>
         <button
           onClick={() => { setProblem(''); setIssuing({ ...EMPTY }) }}
           className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors"
@@ -66,13 +69,13 @@ export default function Accounts() {
         >
           <UserPlus className="h-4 w-4" /> Issue Account
         </button>
-      </PageHead>
+      </div>
 
       {problem && (
-        <p className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">{problem}</p>
+        <p className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">{problem}</p>
       )}
 
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-7 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {accounts.map((a) => {
           const isMe = a.username === session?.username
           return (

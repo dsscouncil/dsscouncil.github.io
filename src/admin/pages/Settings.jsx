@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { Download, Upload, RotateCcw, Check, BarChart3, Loader2 } from 'lucide-react'
 import { useAdmin } from '../store.jsx'
-import { Modal, PageHead, Field, inputCls } from '../ui.jsx'
+import { Modal, PageHead, Field, inputCls, Chip } from '../ui.jsx'
+import Accounts from './Accounts.jsx'
 
 function VoiceAnalytics() {
   const { data, canEdit } = useAdmin()
@@ -133,12 +134,42 @@ function DataManager() {
   )
 }
 
+const TABS = [
+  { id: 'platform', label: 'Platform & Data' },
+  // Issuing and changing accounts is reserved for Super accounts.
+  { id: 'accounts', label: 'Accounts', superOnly: true },
+]
+
 export default function Settings() {
+  const { isSuper } = useAdmin()
+  const [tab, setTab] = useState('platform')
+  const tabs = TABS.filter((t) => !t.superOnly || isSuper)
+  // If the active tab is not available (role changed, or signed out) fall back.
+  const active = tabs.some((t) => t.id === tab) ? tab : tabs[0].id
+
   return (
     <div className="space-y-8">
-      <PageHead title="Settings" sub="Voice analytics, academic year and data management." />
-      <VoiceAnalytics />
-      <DataManager />
+      <PageHead
+        title="Settings"
+        sub={active === 'accounts'
+          ? 'Issue and manage the accounts that can sign in to this console.'
+          : 'Voice analytics, academic year and data management.'}
+      />
+
+      <div className="flex flex-wrap gap-2">
+        {tabs.map((t) => (
+          <Chip key={t.id} active={active === t.id} onClick={() => setTab(t.id)}>{t.label}</Chip>
+        ))}
+      </div>
+
+      {active === 'accounts'
+        ? <Accounts />
+        : (
+          <>
+            <VoiceAnalytics />
+            <DataManager />
+          </>
+        )}
     </div>
   )
 }

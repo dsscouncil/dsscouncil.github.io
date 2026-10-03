@@ -3,13 +3,13 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import {
   LayoutGrid, MessageSquareHeart, Users, Megaphone, CalendarDays, UsersRound,
   MoreHorizontal, ChevronDown, ChevronUp, Newspaper, FileText, Target, Quote, Settings,
-  LogOut, ExternalLink, Mail, Eye, ShieldCheck,
+  LogOut, ExternalLink, Mail, Eye,
 } from 'lucide-react'
 import { useAdmin } from './store.jsx'
 import { LOGO } from '../data/content.js'
 
 export default function AdminLayout() {
-  const { data, session, logout, canEdit, isSuper } = useAdmin()
+  const { data, session, logout, canEdit } = useAdmin()
   const [moreOpen, setMoreOpen] = useState(true)
   const navigate = useNavigate()
 
@@ -28,9 +28,6 @@ export default function AdminLayout() {
     { to: '/admin/circle-quotes', label: 'Circle Quotes', icon: Target, count: data.circleQuotes.length },
     { to: '/admin/leadership-messages', label: 'Leadership Messages', icon: Quote, count: data.leadershipMessages.length },
     { to: '/admin/settings', label: 'Settings', icon: Settings },
-    // Issuing and changing accounts is reserved for Super accounts, so the
-    // entry is hidden entirely for anyone else.
-    ...(isSuper ? [{ to: '/admin/accounts', label: 'Admin Accounts', icon: ShieldCheck }] : []),
   ]
 
   const itemCls = (active) =>
