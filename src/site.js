@@ -11,17 +11,20 @@
 // sentence lives in index.html and `bun run check:meta` guards it.
 
 export const ROUTES = [
-  { path: '/', title: 'DS Secondary Student Council | DS Pulse', priority: '1.0', changefreq: 'daily' },
-  { path: '/council', title: 'Meet the Council | Dubai Scholars Student Council', priority: '0.9', changefreq: 'weekly' },
-  { path: '/clubs', title: 'Clubs & Activities | Dubai Scholars Student Council', priority: '0.9', changefreq: 'weekly' },
-  { path: '/events', title: 'Events | Dubai Scholars Secondary Student Council', priority: '0.9', changefreq: 'weekly' },
-  { path: '/news', title: 'News & Announcements | DS Pulse', priority: '0.9', changefreq: 'weekly' },
-  { path: '/initiatives', title: 'Initiatives | DS Pulse Student Council', priority: '0.8', changefreq: 'monthly' },
-  { path: '/about', title: 'About the Council | DS Pulse', priority: '0.8', changefreq: 'monthly' },
-  { path: '/documents', title: 'Documents | DS Pulse Student Council', priority: '0.7', changefreq: 'monthly' },
-  { path: '/student-voice', title: 'Share Your Voice | DS Pulse', priority: '0.8', changefreq: 'monthly' },
-  { path: '/contact', title: 'Contact | Dubai Scholars Secondary Student Council', priority: '0.8', changefreq: 'monthly' },
+  { path: '/', nav: 'Home', title: 'DS Secondary Student Council | DS Pulse', priority: '1.0', changefreq: 'daily' },
+  { path: '/council', nav: 'Our Council', title: 'Meet the Council | Dubai Scholars Student Council', priority: '0.9', changefreq: 'weekly' },
+  { path: '/clubs', nav: 'Clubs', title: 'Clubs & Activities | Dubai Scholars Student Council', priority: '0.9', changefreq: 'weekly' },
+  { path: '/events', nav: 'Events', title: 'Events | Dubai Scholars Secondary Student Council', priority: '0.9', changefreq: 'weekly' },
+  { path: '/news', nav: 'News', title: 'News & Announcements | DS Pulse', priority: '0.9', changefreq: 'weekly' },
+  { path: '/initiatives', nav: 'Initiatives', title: 'Initiatives | DS Pulse Student Council', priority: '0.8', changefreq: 'monthly' },
+  { path: '/about', nav: 'About', title: 'About the Council | DS Pulse', priority: '0.8', changefreq: 'monthly' },
+  { path: '/documents', nav: 'Documents', title: 'Documents | DS Pulse Student Council', priority: '0.7', changefreq: 'monthly' },
+  { path: '/student-voice', nav: 'Share Your Voice', title: 'Share Your Voice | DS Pulse', priority: '0.8', changefreq: 'monthly' },
+  { path: '/contact', nav: 'Contact', title: 'Contact | Dubai Scholars Secondary Student Council', priority: '0.8', changefreq: 'monthly' },
 ]
+
+/** The URL GitHub Pages actually serves for a route: directories get a slash. */
+export const servedPath = (path) => (path === '/' ? '/' : path + '/')
 
 export const ADMIN_TITLE = 'Council Admin | DS Pulse'
 

@@ -17,13 +17,26 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ROUTES } from '../src/site.js'
+import { ROUTES, servedPath } from '../src/site.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
 const ORIGIN = 'https://www.ds-pulse.com'
 
 const escapeAttr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
+
+// Google builds sitelinks - the indented sub-links under a top result - from the
+// internal links it finds on the page. This app renders its nav with React, so
+// the served HTML contained no links at all until JavaScript ran, leaving Google
+// nothing to choose from. Injecting the same sections into every prerendered page
+// gives it a real internal link graph.
+//
+// sr-only so it is available to crawlers and screen readers without duplicating
+// the visible, hydrated navigation.
+const CRAWL_NAV =
+  '<nav class="sr-only" aria-label="Site sections"><ul>' +
+  ROUTES.map((r) => `<li><a href="${escapeAttr(servedPath(r.path))}">${escapeAttr(r.nav)}</a></li>`).join('') +
+  '</ul></nav>'
 
 const shellPath = join(dist, 'index.html')
 if (!existsSync(shellPath)) {
@@ -55,7 +68,7 @@ const written = []
 for (const route of ROUTES) {
   // GitHub Pages serves a directory as /council/ and 301s /council to it, so the
   // indexable URL - and therefore the canonical and og:url - carries the slash.
-  const url = ORIGIN + (route.path === '/' ? '/' : route.path + '/')
+  const url = ORIGIN + servedPath(route.path)
   let html = shell
   html = swapOnce(html, /<title>[^<]*<\/title>/, `<title>${escapeAttr(route.title)}</title>`, '<title>')
   html = swapOnce(
@@ -97,6 +110,16 @@ for (const route of ROUTES) {
     process.exit(1)
   }
 
+  // Every page must expose every section as a real link, or sitelinks have
+  // nothing to be built from.
+  html = swapOnce(html, /<\/body>/, `${CRAWL_NAV}\n</body>`, 'closing </body>')
+  for (const target of ROUTES) {
+    if (!html.includes(`href="${escapeAttr(servedPath(target.path))}"`)) {
+      console.error(`prerender: ${route.path} does not link to ${target.path}`)
+      process.exit(1)
+    }
+  }
+
   const outDir = route.path === '/' ? dist : join(dist, route.path)
   mkdirSync(outDir, { recursive: true })
   writeFileSync(join(outDir, 'index.html'), html)
@@ -111,7 +134,7 @@ copyFileSync(shellPath, join(dist, '404.html'))
 const urls = written
   .map(
     (r) => `  <url>
-    <loc>${ORIGIN}${r.path === '/' ? '/' : r.path + '/'}</loc>
+    <loc>${ORIGIN}${servedPath(r.path)}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${r.changefreq}</changefreq>
     <priority>${r.priority}</priority>
