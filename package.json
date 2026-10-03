@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && bun scripts/prerender.mjs",
     "build:preview": "vite build --mode preview",
+    "prerender": "bun scripts/prerender.mjs",
     "check:meta": "bun scripts/check-meta.mjs",
     "lint": "oxlint",
     "preview": "vite preview"

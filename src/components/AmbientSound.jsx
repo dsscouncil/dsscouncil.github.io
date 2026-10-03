@@ -20,7 +20,9 @@ export default function AmbientSound() {
   })
 
   useEffect(() => {
-    const el = new Audio('./audio/ambient-loop-v3.m4a')
+    // Absolute, not relative: the site now serves real URLs like /council, and
+    // a './audio/...' path would resolve to /council/audio/... and 404.
+    const el = new Audio('/audio/ambient-loop-v3.m4a')
     el.loop = true
     el.volume = 0.35
     // 'none' keeps the 1.2 MB track off the critical path: the browser only

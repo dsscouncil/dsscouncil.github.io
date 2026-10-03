@@ -14,6 +14,7 @@ import Clubs from './pages/Clubs.jsx'
 import News from './pages/News.jsx'
 import Documents from './pages/Documents.jsx'
 import Contact from './pages/Contact.jsx'
+import { titleFor, ADMIN_TITLE } from './site.js'
 
 // The admin dashboard is only ever used by council staff, so it is split into
 // its own chunk instead of being downloaded by every public visitor.
@@ -148,6 +149,18 @@ function AdminGate() {
   )
 }
 
+// The prerendered HTML already carries the right <title> for a direct hit on
+// any URL. This keeps it correct after a client-side navigation, so the browser
+// tab, bookmarks and history entries are not left labelled with the previous
+// page. Titles come from the same list prerender.mjs bakes into the HTML.
+function PageTitle() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    document.title = pathname.startsWith('/admin') ? ADMIN_TITLE : titleFor(pathname)
+  }, [pathname])
+  return null
+}
+
 function Site() {
   const { data, error, loading, refresh } = useAdmin()
   if (loading) return <Loading />
@@ -181,6 +194,7 @@ export default function App() {
     <AdminProvider>
       <ErrorBoundary>
         <ScrollToTop />
+        <PageTitle />
         <Routes>
         <Route path="/admin/*" element={<Suspense fallback={<Loading />}><AdminGate /></Suspense>} />
         <Route path="*" element={<Site />} />
