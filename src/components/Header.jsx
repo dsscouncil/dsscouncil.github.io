@@ -40,11 +40,24 @@ export default function Header() {
                 key={l.href}
                 to={l.href}
                 end={l.href === '/'}
-                className={({ isActive }) =>
-                  `text-sm font-medium transition-colors ${isActive ? 'text-gold-ink' : 'text-navy/70 hover:text-navy'}`
-                }
+                className="group relative pb-1"
               >
-                {l.label}
+                {({ isActive }) => (
+                  <>
+                    <span
+                      className={`text-sm font-medium transition-colors ${isActive ? 'text-gold-ink' : 'text-navy/70 group-hover:text-navy'}`}
+                    >
+                      {l.label}
+                    </span>
+                    {/* Active page shows the bar solid; hover sweeps it in from the left. */}
+                    <span
+                      aria-hidden="true"
+                      className={`pointer-events-none absolute inset-x-0 -bottom-0.5 h-[2px] origin-left rounded-full bg-gold-ink transition-transform duration-300 ease-out motion-reduce:transition-none ${
+                        isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                      }`}
+                    />
+                  </>
+                )}
               </NavLink>
             ))}
           </div>
