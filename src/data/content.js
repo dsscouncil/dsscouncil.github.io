@@ -109,7 +109,7 @@ export const newsArticles = [
     title: 'Welcome to the 2026–27 Student Council Website',
     excerpt: "Hello Everyone! I am the IT Coordinator for this year, and I am looking forward to work with you guys, especially in this special 50th student council.",
     date: '1 September 2026',
-    author: 'IT Coordinator',
+    author: 'Burhanuddin',
     featured: true,
     body: [
       "Hello Everyone! I am the IT Coordinator for this year, and I am looking forward to work with you guys, especially in this special 50th student council.",
