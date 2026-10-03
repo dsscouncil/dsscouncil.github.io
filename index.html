@@ -58,11 +58,10 @@
     }
     </script>
 
-    <!-- Fonts are self-hosted (see @font-face in src/index.css). Preloading the
-         two latin variable files means text paints with the real typeface on the
-         first frame, with no third-party connection in the critical path. -->
-    <link rel="preload" href="./fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="./fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Fonts are bundled locally (see @font-face in src/index.css) instead of
+         loaded from Google Fonts. The old external stylesheet was render-blocking
+         and added two third-party connections before first paint; the variable
+         woff2 files are now emitted into assets/ and discovered as the CSS parses. -->
   </head>
   <body>
     <div id="root"></div>
