@@ -14,7 +14,7 @@ const LINES = [
 export default function PulseMark({ className = '' }) {
   return (
     <span className={className}>
-      <span className="sr-only">Proactive Union for Leadership and Student Empowerment</span>
+      <span className="sr-only">DS Pulse — Proactive Union for Leadership and Student Empowerment</span>
       <span aria-hidden="true">
         {LINES.map(([cap, rest]) => (
           <span key={cap} className="block">

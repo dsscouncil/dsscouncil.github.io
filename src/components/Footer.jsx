@@ -53,7 +53,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-white/50">© 2026 Dubai Scholars Secondary Student Council - Made by Burhanuddin Khanbhaiwala</p>
+          <p className="text-sm text-white/50">© 2026 Dubai Scholars Secondary Student Council (DS Pulse) — Made by Burhanuddin Khanbhaiwala</p>
           <div className="flex items-center gap-6">
             <Link to="/admin" className="text-sm text-white/50 hover:text-gold transition-colors">Council Admin</Link>
             <p className="text-sm text-white/50">Official student leadership platform · Built by the Council (song credit to NoMBe)</p>

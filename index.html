@@ -29,7 +29,7 @@
     <meta property="og:image" content="https://www.ds-pulse.com/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Dubai Scholars Secondary Student Council — ds-pulse.com" />
+    <meta property="og:image:alt" content="Dubai Scholars Secondary Student Council — DS Pulse" />
     <meta property="og:locale" content="en_AE" />
 
     <!-- Twitter/X -->
@@ -40,44 +40,46 @@
 
     <!-- Structured data for Google -->
 
-    <!-- The WebSite entity is what sets the site name shown above the result in
-         Google ("ds-pulse.com" before this, derived from the domain). Google's
-         favicon has its own crawl schedule and is not affected by this. -->
+    <!-- One @graph so the two entities resolve against each other in a single
+         pass. The WebSite entity is what claims the site name shown above the
+         result; without it Google derives one from the domain and renders the
+         bare hostname. The name is only honoured once "DS Pulse" appears as real
+         text on the page, which is why the footer spells it out. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebSite",
-      "@id": "https://www.ds-pulse.com/#website",
-      "url": "https://www.ds-pulse.com/",
-      "name": "DS Pulse",
-      "alternateName": "DS Secondary Student Council",
-      "inLanguage": "en-AE",
-      "publisher": { "@id": "https://www.ds-pulse.com/#organization" }
-    }
-    </script>
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "@id": "https://www.ds-pulse.com/#organization",
-      "name": "DS Secondary Student Council",
-      "alternateName": "DS Pulse",
-      "url": "https://www.ds-pulse.com/",
-      "logo": "https://www.ds-pulse.com/logo.png",
-      "slogan": "We Don't Just Represent. We Deliver.",
-      "parentOrganization": {
-        "@type": "School",
-        "name": "Dubai Scholars Private School",
-        "url": "https://dubaischolars.com",
-        "sameAs": [
-          "https://ae.linkedin.com/school/dubai-scholars-private-school/",
-          "https://www.instagram.com/dubaischolars1976"
-        ]
-      },
-      "sameAs": [
-        "https://www.instagram.com/dsstudentcouncil",
-        "https://ae.linkedin.com/school/dubai-scholars-private-school/"
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://www.ds-pulse.com/#website",
+          "url": "https://www.ds-pulse.com/",
+          "name": "DS Pulse",
+          "alternateName": "DS Secondary Student Council",
+          "inLanguage": "en-AE",
+          "publisher": { "@id": "https://www.ds-pulse.com/#organization" }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://www.ds-pulse.com/#organization",
+          "name": "DS Secondary Student Council",
+          "alternateName": "DS Pulse",
+          "url": "https://www.ds-pulse.com/",
+          "logo": "https://www.ds-pulse.com/logo.png",
+          "slogan": "We Don't Just Represent. We Deliver.",
+          "parentOrganization": {
+            "@type": "School",
+            "name": "Dubai Scholars Private School",
+            "url": "https://dubaischolars.com",
+            "sameAs": [
+              "https://ae.linkedin.com/school/dubai-scholars-private-school/",
+              "https://www.instagram.com/dubaischolars1976"
+            ]
+          },
+          "sameAs": [
+            "https://www.instagram.com/dsstudentcouncil",
+            "https://ae.linkedin.com/school/dubai-scholars-private-school/"
+          ]
+        }
       ]
     }
     </script>
