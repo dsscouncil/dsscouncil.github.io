@@ -114,7 +114,7 @@ export default function Home() {
             </div>
           </Reveal>
           <Reveal delay={120}>
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">About the Council</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-ink mb-3">About the Council</div>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-navy leading-tight">{sc.aboutTitle}</h2>
             <p className="mt-5 text-muted-foreground leading-relaxed">{sc.aboutText}</p>
             <div className="mt-6 rounded-2xl border-l-2 border-gold bg-surface p-5">
@@ -158,7 +158,7 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="p-5">
-                    <div className="text-xs font-semibold uppercase tracking-wide text-gold mb-2">{ini.category}</div>
+                    <div className="text-xs font-semibold uppercase tracking-wide text-gold-ink mb-2">{ini.category}</div>
                     <h3 className="font-display text-lg font-bold text-navy group-hover:text-gold transition-colors">{ini.title}</h3>
                     <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{ini.description}</p>
                   </div>
@@ -175,7 +175,7 @@ export default function Home() {
           <Reveal>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">News &amp; Announcements</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-ink mb-3">News &amp; Announcements</div>
                 <h2 className="font-display text-3xl md:text-4xl font-bold text-navy">From the Council desk</h2>
               </div>
               <Link to="/news" className="inline-flex items-center gap-2 text-sm font-semibold text-navy hover:text-gold transition-colors group">

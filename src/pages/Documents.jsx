@@ -50,7 +50,7 @@ export default function Documents() {
                         <FileText className="h-4 w-4 text-gold" /> {d.title}
                       </h3>
                       <p className="mt-2 text-sm text-muted-foreground">{d.description}</p>
-                      {d.url && <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-gold">Open document <ExternalLink className="h-3.5 w-3.5" /></span>}
+                      {d.url && <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-gold-ink">Open document <ExternalLink className="h-3.5 w-3.5" /></span>}
                     </Tag>
                   )
                 })()}

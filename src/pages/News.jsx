@@ -81,7 +81,7 @@ export default function News() {
                       <span className="inline-flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5 text-gold" />{a.date}</span>
                       <span className="inline-flex items-center gap-1.5"><User className="h-3.5 w-3.5 text-gold" />{a.author}</span>
                     </div>
-                    <button onClick={(e) => { e.stopPropagation(); setOpenId(a.id) }} className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-gold/80 transition-colors group-hover:gap-3">
+                    <button onClick={(e) => { e.stopPropagation(); setOpenId(a.id) }} className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-gold-ink transition-colors group-hover:gap-3">
                       Read full announcement
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </button>
@@ -113,7 +113,7 @@ export default function News() {
               </div>
               <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-navy/85">
                 {(open.body || []).map((p, i) => (
-                  <p key={i} className={i === open.body.length - 1 ? 'font-semibold text-gold' : ''}>{p}</p>
+                  <p key={i} className={i === open.body.length - 1 ? 'font-semibold text-gold-ink' : ''}>{p}</p>
                 ))}
               </div>
             </div>

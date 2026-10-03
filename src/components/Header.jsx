@@ -41,7 +41,7 @@ export default function Header() {
                 to={l.href}
                 end={l.href === '/'}
                 className={({ isActive }) =>
-                  `text-sm font-medium transition-colors ${isActive ? 'text-gold' : 'text-navy/70 hover:text-navy'}`
+                  `text-sm font-medium transition-colors ${isActive ? 'text-gold-ink' : 'text-navy/70 hover:text-navy'}`
                 }
               >
                 {l.label}
@@ -78,7 +78,7 @@ export default function Header() {
                 to={l.href}
                 end={l.href === '/'}
                 className={({ isActive }) =>
-                  `rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive ? 'bg-surface text-gold' : 'text-navy/80 hover:bg-surface'}`
+                  `rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive ? 'bg-surface text-gold-ink' : 'text-navy/80 hover:bg-surface'}`
                 }
               >
                 {l.label}

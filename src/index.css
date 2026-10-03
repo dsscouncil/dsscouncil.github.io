@@ -46,6 +46,11 @@
   --color-navy: hsl(213 65% 9%);
   --color-navy-deep: hsl(213 70% 6%);
   --color-gold: hsl(39 53% 57%);
+  /* Text-safe gold. The brand gold is only 2.36:1 against white, well under the
+     4.5:1 WCAG AA minimum, so gold TEXT on light surfaces uses this deeper amber
+     instead (5.62:1 on white, 5.23:1 on surface). Gold on navy keeps the bright
+     brand value, which scores 7.78:1 there. */
+  --color-gold-ink: hsl(37 53% 34%);
   --color-gold-soft: hsl(40 60% 72%);
   --color-surface: hsl(210 36% 97%);
   --color-intel: hsl(217 91% 45%);

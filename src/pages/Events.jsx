@@ -131,7 +131,7 @@ export default function Events() {
                       <span className="text-xs font-semibold tracking-widest">{e.month}</span>
                     </div>
                     <div className="flex-1">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-gold">{e.type}</span>
+                      <span className="text-xs font-semibold uppercase tracking-wide text-gold-ink">{e.type}</span>
                       <h3 className="font-display text-xl font-bold text-navy mt-1">{e.title}</h3>
                       <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
                         {e.date && (
@@ -180,7 +180,7 @@ export default function Events() {
                             <div className="text-[10px] font-semibold tracking-widest mt-0.5">{e.month}</div>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <span className="text-[10px] font-semibold uppercase tracking-wide text-gold">{e.type}</span>
+                            <span className="text-[10px] font-semibold uppercase tracking-wide text-gold-ink">{e.type}</span>
                             <h4 className="font-display font-bold text-navy leading-snug">{e.title}</h4>
                             <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-muted-foreground">
                               {e.date && (

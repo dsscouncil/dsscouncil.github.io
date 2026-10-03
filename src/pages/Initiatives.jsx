@@ -27,7 +27,7 @@ export default function Initiatives() {
       <section className="py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <Reveal>
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">Featured Projects</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-ink mb-3">Featured Projects</div>
           </Reveal>
 
           <div className="flex flex-wrap gap-2 mb-10">
@@ -60,7 +60,7 @@ export default function Initiatives() {
                     </div>
                   </div>
                   <div className="p-5">
-                    <div className="text-xs font-semibold uppercase tracking-wide text-gold mb-2">{ini.category}</div>
+                    <div className="text-xs font-semibold uppercase tracking-wide text-gold-ink mb-2">{ini.category}</div>
                     <h3 className="font-display text-lg font-bold text-navy group-hover:text-gold transition-colors">{ini.title}</h3>
                     <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{ini.description}</p>
                     <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted-foreground">

@@ -28,10 +28,10 @@ function MemberCard({ m }) {
           {m.cat}
         </span>
         <h3 className="mt-2.5 font-display text-lg font-bold text-navy">{m.name}</h3>
-        <p className="mt-1 text-sm font-medium text-gold">{m.role}</p>
+        <p className="mt-1 text-sm font-medium text-gold-ink">{m.role}</p>
         <p className="text-xs text-muted-foreground mt-0.5">{m.year}</p>
         {m.house && <p className="mt-1.5 text-xs font-semibold text-navy/70">{m.house}</p>}
-        {m.note && <p className="mt-2 inline-block rounded-full bg-gold/15 px-3 py-1 text-xs font-semibold text-gold">{m.note}</p>}
+        {m.note && <p className="mt-2 inline-block rounded-full bg-gold/15 px-3 py-1 text-xs font-semibold text-gold-ink">{m.note}</p>}
         {m.description && <p className="mt-2 text-xs text-muted-foreground">{m.description}</p>}
       </div>
     </div>

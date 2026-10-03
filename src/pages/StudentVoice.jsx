@@ -199,7 +199,7 @@ export default function StudentVoice() {
                 {data.siteContent.ideasBoard.map((idea) => (
                   <div key={idea.id} className="rounded-2xl border border-border bg-surface p-5">
                     <div className="flex items-center justify-between gap-3">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-gold">{idea.category}</span>
+                      <span className="text-xs font-semibold uppercase tracking-wide text-gold-ink">{idea.category}</span>
                       <span className={`rounded-full px-3 py-1 text-xs font-semibold border ${idea.status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>{idea.status}</span>
                     </div>
                     <h3 className="mt-2 font-display font-bold text-navy">{idea.title}</h3>

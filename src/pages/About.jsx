@@ -100,7 +100,7 @@ function CirclesDiagram({ circles }) {
       <div className="rounded-3xl border border-border bg-white p-8 gold-outline">
         {activeCircle ? (
           <div key={activeCircle.key} className="circle-quote">
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">{activeCircle.label}</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-ink mb-3">{activeCircle.label}</div>
             <p className="font-display text-xl md:text-2xl font-semibold text-navy leading-snug">
               &ldquo;{activeCircle.quote}&rdquo;
             </p>
@@ -130,7 +130,7 @@ export default function About() {
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <Reveal>
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">What We Do</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-ink mb-3">What We Do</div>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-navy">The Council focuses on</h2>
             <p className="mt-3 text-muted-foreground">Eight pillars that guide our work across the school year.</p>
           </Reveal>
@@ -151,7 +151,7 @@ export default function About() {
       <section className="py-16 md:py-20 bg-white">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <Reveal>
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">Voices of Leadership</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-ink mb-3">Voices of Leadership</div>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-navy">Messages to the Council</h2>
             <p className="mt-3 text-muted-foreground max-w-2xl">Words of guidance from those who support and oversee our student leaders.</p>
           </Reveal>
@@ -166,7 +166,7 @@ export default function About() {
                   <p className="mt-4 text-sm leading-relaxed text-navy/80">{m.quote}</p>
                   <div className="mt-5">
                     <div className="font-display font-bold text-navy">{m.name}</div>
-                    <div className="text-xs font-semibold uppercase tracking-wide text-gold mt-1">{m.role}</div>
+                    <div className="text-xs font-semibold uppercase tracking-wide text-gold-ink mt-1">{m.role}</div>
                   </div>
                 </div>
               </Reveal>
@@ -179,7 +179,7 @@ export default function About() {
       <section className="py-16 md:py-20 bg-white">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <Reveal>
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">House System</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-ink mb-3">House System</div>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-navy">The four houses</h2>
             <p className="mt-3 text-muted-foreground max-w-2xl">
               Every student belongs to a house — four communities that compete, create and serve together, each guided by its own value.
@@ -216,7 +216,7 @@ export default function About() {
           <Reveal>
             <Quote className="h-10 w-10 text-gold mx-auto" />
             <p className="mt-6 font-display text-xl md:text-2xl font-medium text-navy leading-relaxed">{sc.philosophy}</p>
-            <div className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-gold">House of Accountability</div>
+            <div className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-gold-ink">House of Accountability</div>
           </Reveal>
         </div>
       </section>
@@ -225,7 +225,7 @@ export default function About() {
       <section className="py-20 md:py-24 bg-white">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <Reveal>
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-3">Structure</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-ink mb-3">Structure</div>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-navy">Circles of responsibility</h2>
             <p className="mt-3 text-muted-foreground max-w-2xl">
               The Council works in connected circles — each supporting the next, none above another. Every role matters equally to how the Council serves.
