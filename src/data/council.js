@@ -45,7 +45,7 @@ export const members = [
   { name: 'Sahib Soni', role: 'Head of STEAM', year: 'Year 10', cat: 'Departmental Leadership', img: P('3f0915075_Screenshot2026-09-16at40736PM.png') },
   { name: 'Shivaneshwar Suresh', role: 'STEAM Coordinator', year: 'Year 9', cat: 'Departmental Leadership', img: P('50ca34e89_Screenshot2026-09-16at40744PM.png') },
   { name: 'Anabelle Ajit', role: 'Head of MUN', year: 'Year 10', cat: 'Departmental Leadership', img: P('0cd940eb5_Screenshot2026-09-16at41110PM.png') },
-  { name: 'Burhanuddin Khanbhai', role: 'IT Coordinator', year: 'Year 9', cat: 'Departmental Leadership', note: 'Website Author', img: P('d79e7f6fa_Screenshot2026-09-17at65127PM.png') },
+  { name: 'Burhanuddin Khanbhai', role: 'IT Coordinator', year: 'Year 9', cat: 'Departmental Leadership', img: P('d79e7f6fa_Screenshot2026-09-17at65127PM.png') },
   { name: 'Arjun Bendkhale', role: 'Head of IT', year: 'Year 10', cat: 'Departmental Leadership', img: P('556c26f1e_Screenshot2026-09-16at40839PM.png') },
   { name: 'Amit Eyyani', role: 'Head of Entrepreneurship', year: 'Year 10', cat: 'Departmental Leadership', img: P('c36acc10a_Screenshot2026-09-16at40457PM.png') },
   { name: 'Sheryl Robert', role: 'Events Coordinator', year: 'Year 9', cat: 'Departmental Leadership', img: P('bbaa551cd_Screenshot2026-09-16at41628PM.png') },
