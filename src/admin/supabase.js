@@ -285,10 +285,18 @@ export function fromDbRow(collection, row) {
   return c.map(row)
 }
 
-export async function adminManageAccount(token, action, username, password, displayName) {
+export async function adminListAccounts(token) {
+  if (!token) return []
+  const { data, error } = await supabase.rpc('admin_list_accounts', { p_token: token })
+  if (error) throw new Error(error.message)
+  return Array.isArray(data) ? data : []
+}
+
+export async function adminManageAccount(token, action, username, { password, displayName, role } = {}) {
   const { data, error } = await supabase.rpc('admin_manage_account', {
     p_token: token, p_action: action, p_username: username,
     p_new_password: password || null, p_display_name: displayName || null,
+    p_role: role || null,
   })
   if (error) throw new Error(error.message)
   return data

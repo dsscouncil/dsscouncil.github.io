@@ -31,6 +31,7 @@ const AdminDocuments = lazy(() => import('./admin/pages/Documents.jsx'))
 const AdminCircleQuotes = lazy(() => import('./admin/pages/CircleQuotes.jsx'))
 const AdminMessages = lazy(() => import('./admin/pages/LeadershipMessages.jsx'))
 const AdminSettings = lazy(() => import('./admin/pages/Settings.jsx'))
+const AdminAccounts = lazy(() => import('./admin/pages/Accounts.jsx'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -142,6 +143,7 @@ function AdminGate() {
         <Route path="circle-quotes" element={<AdminCircleQuotes />} />
         <Route path="leadership-messages" element={<AdminMessages />} />
         <Route path="settings" element={<AdminSettings />} />
+        <Route path="accounts" element={<AdminAccounts />} />
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Route>
     </Routes>

@@ -1,7 +1,7 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import {
   supabase, fetchSiteData, fetchSubmissions, fetchContactMessages,  submitVoice, uploadVoiceFile, submitContactMessage,
-  adminLogin, adminValidate, adminLogout, adminWrite, adminManageAccount,
+  adminLogin, adminValidate, adminLogout, adminWrite, adminManageAccount, adminListAccounts,
   adminResetContent, toDbRow, fromDbRow, COLLECTIONS,
   SESSION_KEY,
 } from './supabase.js'
@@ -61,6 +61,23 @@ export function AdminProvider({ children }) {
   }, [])
 
   const canEdit = session?.role !== 'viewer'
+  // Only Super accounts may issue or change other admin accounts.
+  const isSuper = session?.role === 'super'
+  const [accounts, setAccounts] = useState([])
+
+  const loadAccounts = useCallback(async () => {
+    if (session?.role !== 'super') {
+      setAccounts([])
+      return
+    }
+    try {
+      setAccounts(await adminListAccounts(session.token))
+    } catch (e) {
+      setError(e.message || 'Failed to load accounts')
+    }
+  }, [session])
+
+  useEffect(() => { loadAccounts() }, [loadAccounts])
 
   const actions = useMemo(() => {
     const persist = async (collection, op, id, item) => {
@@ -125,9 +142,11 @@ export function AdminProvider({ children }) {
       },
 
       // ── accounts (server-side, gated by session) ──
-      manageAccount: (action, username, password, displayName) => {
-        if (session.role === 'viewer') throw new Error('Your account has read-only access')
-        return adminManageAccount(session.token, action, username, password, displayName)
+      manageAccount: async (action, username, opts) => {
+        if (session?.role !== 'super') throw new Error('Only Super accounts can manage admin accounts')
+        const result = await adminManageAccount(session.token, action, username, opts)
+        await loadAccounts()
+        return result
       },
 
       // ── import / rollover: bulk replace content ──
@@ -166,11 +185,11 @@ export function AdminProvider({ children }) {
         await resetContent(payload)
       },
     }
-  }, [data, session])
+  }, [data, session, loadAccounts])
 
   // App-model convenience aliases used by existing pages
   const value = useMemo(() => {
-    if (!data) return { data: null, error, session, loading: true, canEdit, ...actions }
+    if (!data) return { data: null, error, session, loading: true, canEdit, isSuper, accounts, ...actions }
     const siteContent = {
       stats: data.stats,
       pillars: data.pillars,
@@ -186,8 +205,8 @@ export function AdminProvider({ children }) {
       aboutText: data.settings.aboutText,
       homeQuote: data.settings.homeQuote,
     }
-    return { data: { ...data, siteContent, accounts: [] }, error, session, loading: false, canEdit, ...actions }
-  }, [data, error, session, actions, canEdit])
+    return { data: { ...data, siteContent }, error, session, loading: false, canEdit, isSuper, accounts, ...actions }
+  }, [data, error, session, actions, canEdit, isSuper, accounts])
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>
 }
