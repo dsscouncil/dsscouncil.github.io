@@ -45,8 +45,8 @@ export default function Home() {
           <Reveal delay={150}>
             <div className="relative">
               <div className="relative rounded-3xl overflow-hidden gold-outline">
-                <span className="inline-block relative w-full h-[420px] md:h-[520px]">
-                  <img src={IMG.hero} alt="Dubai Scholars student leaders" referrerPolicy="no-referrer" className="w-full h-full inset-0 absolute object-cover" />
+                <span className="inline-block relative w-full aspect-[3/2]">
+                  <img src={IMG.hero} alt="Dubai Scholars student leaders" referrerPolicy="no-referrer" className="w-full h-full inset-0 absolute object-contain" />
                 </span>
               </div>
               <div className="absolute -bottom-6 -left-6 md:-left-10 glass-dark rounded-2xl p-5 shadow-lg w-56">
@@ -86,8 +86,8 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-5 lg:px-8 grid lg:grid-cols-2 gap-14 items-center">
           <Reveal>
             <div className="rounded-3xl overflow-hidden gold-outline">
-              <span className="relative w-full h-[380px] block">
-                <img src={IMG.about} alt="Students collaborating" referrerPolicy="no-referrer" className="w-full h-full inset-0 absolute object-cover" />
+              <span className="relative w-full aspect-[7/5] block">
+                <img src={IMG.about} alt="Students collaborating" referrerPolicy="no-referrer" className="w-full h-full inset-0 absolute object-contain" />
               </span>
             </div>
           </Reveal>

@@ -2,9 +2,14 @@ import logoUrl from '../assets/logo.png'
 
 export const LOGO = logoUrl
 
+// NOTE: request each image at its NATIVE pixel size. The `fill/...al_c`
+// transform centre-crops to the requested box, which cropped these landscape
+// photos down to portrait slices and made them look zoomed in. Matching the
+// native dimensions leaves the whole frame visible; the frames in Home.jsx use
+// matching `aspect-*` classes so the image is displayed uncropped.
 export const IMG = {
-  hero: 'https://media.base44.com/images/public/6a9d1eb10b66aa6d58818301/b297102f1_skl.jpg/v1/fill/w_822,h_1260,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/b297102f1_skl.webp',
-  about: 'https://media.base44.com/images/public/6a9d1eb10b66aa6d58818301/afb4cd38f_DS-small.jpg/v1/fill/w_822,h_1140,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/afb4cd38f_DS-small.webp',
+  hero: 'https://media.base44.com/images/public/6a9d1eb10b66aa6d58818301/b297102f1_skl.jpg/v1/fill/w_1500,h_1000,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/b297102f1_skl.webp',
+  about: 'https://media.base44.com/images/public/6a9d1eb10b66aa6d58818301/afb4cd38f_DS-small.jpg/v1/fill/w_1260,h_900,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/afb4cd38f_DS-small.webp',
 }
 
 export const navLinks = [
