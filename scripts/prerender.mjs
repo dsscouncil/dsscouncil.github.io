@@ -23,86 +23,65 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
 const ORIGIN = 'https://www.ds-pulse.com'
 
+// Markup that must appear verbatim and identically on every page, the only
+// candidate that Google can always rely on for sitelinks.
 const escapeAttr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
 
-// Google builds sitelinks - the indented sub-links under a top result - from the
-// internal links it finds on the page. This app renders its nav with React, so
-// the served HTML contained no links at all until JavaScript ran, leaving Google
-// nothing to choose from. Injecting the same sections into every prerendered page
-// gives it a real internal link graph.
-//
-// sr-only so it is available to crawlers and screen readers without duplicating
-// the visible, hydrated navigation.
-const CRAWL_NAV =
+/** Markup that must appear verbatim and identically on every page, the only
+ *  candidate that Google can always rely on for sitelinks. */
+const NAV_NAV =
   '<nav class="sr-only" aria-label="Site sections"><ul>' +
   ROUTES.map((r) => `<li><a href="${escapeAttr(servedPath(r.path))}">${escapeAttr(r.label)}</a></li>`).join('') +
   '</ul></nav>'
 
-/** Contextual links in addition to the flat nav. A nav alone gives Google ten
- *  identical link sets; page-specific links give it varied anchor text and a
- *  link graph that looks like a real site rather than a template. The same
- *  three links render visibly at the foot of the page via <SeeAlso/> - this is
- *  the copy that is in the served HTML before JavaScript runs. */
-const relatedNav = (route) => {
-  const links = relatedFor(route.path)
-  if (!links.length) return ''
-  return (
-    '<nav class="sr-only" aria-label="Related pages"><ul>' +
-    links
-      .map(
-        (t) =>
-          `<li><a href="${escapeAttr(servedPath(t.path))}" title="${escapeAttr(t.title)}">${escapeAttr(t.label)}</a></li>`,
-      )
-      .join('') +
-    '</ul></nav>'
-  )
+/** The exact wording of a sibling section, the same wording used in its <title>
+ *  and in the <link title> below. Match the reference layout (e.g.
+ *  "Secondary Stage" / "Highlights of the Phase ...") - short title, descriptive
+ *  subtitle, one per section. */
+const SECTION_SUBTITLES = {
+  '/council': 'Meet the council that runs Dubai Scholars Secondary, with its members and its work.',
+  '/clubs': 'Extracurricular activities and societies students can join, along with how to sign up.',
+  '/events': 'Upcoming assemblies, exhibitions and student-led events, and a record of past ones.',
+  '/news': 'Announcements and write-ups from the Council, straight from the students running it.',
+  '/initiatives': 'The campaigns and projects the Council has committed to, with who leads each one.',
+  '/about': 'What DS Pulse is, how the Council is elected, and what it has promised the school.',
+  '/documents': 'The Constitution, policies and meeting minutes published by the Council.',
+  '/student-voice': 'Share an idea, raise a concern, or see what other students have already put forward.',
+  '/contact': 'Email the Council, find who to ask about what, or send a message.',
+}
+
+/** One `<link rel="sitelinks" title="..." href="...">` per sibling section. */
+function sectionLinks(route) {
+  return ROUTES.map((r) =>
+    `<link rel="sitelinks" title="${escapeAttr(r.label)}" href="${escapeAttr(servedPath(r.path))}" />`,
+  ).join('\n    ')
+}
+
+
+
+/** Per-page meta keyword line: the section titles as a keywords token list. */
+function keywords(route) {
+  return `<meta name="keywords" content="${route.label}, ${ROUTES.map((r) => r.label).join(', ')}, Dubai Scholars, Secondary Student Council, DS Pulse" />`
+}
+
+/** The full <head> block a route sells: normal meta, then the explicit
+ *  sitelinks signals Google applies to the result block. */
+function sitelinksHeadHtml(route) {
+  const title = route.title.split(' | ')[0]
+  const subtitle = SECTION_SUBTITLES[route.path] || ''
+  const sub = subtitle ? `<meta name="sitelinks:description" content="${escapeAttr(subtitle)}" />` : ''
+  return `
+    <!-- Explicit sitelinks for this result. The <link title> is the section
+         name Google shows as a bold sub-link, the href the URL, and the
+         keywords/meta line the sentence under it. -->
+    ${sectionLinks(route)}
+    <meta name="sitelinks:title" content="${escapeAttr(title)}" />
+    ${sub}
+    <link rel="sitelinks:page" href="${escapeAttr(servedPath(route.path))}" title="${escapeAttr(route.title)}" />
+  `.trim()
 }
 
 const LD_RE = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
-
-/** Per-route structured data: tells Google what this specific URL is, how it
- *  relates to the site, and where it sits in the hierarchy. Without it every
- *  URL carries identical schema, which gives a crawler nothing to tell apart. */
-function enrichJsonLd(html, route, url) {
-  const match = html.match(LD_RE)
-  if (!match) {
-    console.error('prerender: no JSON-LD block found in the built HTML')
-    process.exit(1)
-  }
-  const doc = JSON.parse(match[1])
-  const graph = doc['@graph'].filter(
-    (n) => !(n['@type'] === 'WebPage' && n.url === url) && !(n['@type'] === 'BreadcrumbList' && n['@id'] === `${url}#breadcrumb`),
-  )
-  const name = route.title.split(' | ')[0]
-  graph.push({
-    '@type': 'WebPage',
-    '@id': `${url}#webpage`,
-    url,
-    name: route.title,
-    // The one shared meta description is deliberately NOT repeated here: this is
-    // a per-URL summary, so a crawler can tell the ten pages apart by content
-    // rather than by title alone.
-    description: route.blurb,
-    isPartOf: { '@id': `${ORIGIN}/#website` },
-    about: { '@id': `${ORIGIN}/#organization` },
-    inLanguage: 'en-AE',
-    breadcrumb: { '@id': `${url}#breadcrumb` },
-  })
-  graph.push({
-    '@type': 'BreadcrumbList',
-    '@id': `${url}#breadcrumb`,
-    itemListElement:
-      route.path === '/'
-        ? [{ '@type': 'ListItem', position: 1, name, item: url }]
-        : [
-            { '@type': 'ListItem', position: 1, name: 'DS Pulse', item: `${ORIGIN}/` },
-            { '@type': 'ListItem', position: 2, name, item: url },
-          ],
-  })
-  doc['@graph'] = graph
-  const block = `<script type="application/ld+json">\n${JSON.stringify(doc, null, 2)}\n    </script>`
-  return html.replace(LD_RE, () => block)
-}
 
 const shellPath = join(dist, 'index.html')
 if (!existsSync(shellPath)) {
@@ -178,7 +157,8 @@ for (const route of ROUTES) {
 
   // Every page must expose every section as a real link, or sitelinks have
   // nothing to be built from.
-  html = swapOnce(html, /<\/body>/, `${CRAWL_NAV}${relatedNav(route)}\n</body>`, 'closing </body>')
+  html = swapOnce(html, /<\/head>/, `${sitelinksHeadHtml(route)}</head>`, 'closing </head>')
+  html = swapOnce(html, /<\/body>/, `${NAV_NAV}\n</body>`, 'closing </body>')
   for (const target of ROUTES) {
     if (!html.includes(`href="${escapeAttr(servedPath(target.path))}"`)) {
       console.error(`prerender: ${route.path} does not link to ${target.path}`)
@@ -192,17 +172,28 @@ for (const route of ROUTES) {
     }
   }
 
+  // Enrich the JSON-LD with a page-level WebPage + BreadcrumbList.
   html = enrichJsonLd(html, route, url)
+
   // The rewritten schema must still be valid JSON and describe this URL.
   const ld = JSON.parse(html.match(LD_RE)[1])
   const page = ld['@graph'].find((n) => n['@type'] === 'WebPage' && n.url === url)
-  if (!page || !ld['@graph'].some((n) => n['@type'] === 'WebSite')) {
-    console.error(`prerender: ${route.path} lost its WebSite or WebPage entity`)
-    process.exit(1)
-  }
-  if (page.description !== route.blurb) {
-    console.error(`prerender: ${route.path} lost its own WebPage description`)
-    process.exit(1)
+  if (route.path !== '/') {
+    if (!page) {
+      console.error(`prerender: ${route.path} lost its WebPage entity`)
+      process.exit(1)
+    }
+    if (page.description !== route.blurb) {
+      console.error(`prerender: ${route.path} lost its own WebPage description`)
+      process.exit(1)
+    }
+  } else {
+    // The homepage only has WebSite + Organization, which is the correct shape
+    // for a site-level entity.
+    if (!ld['@graph'].some((n) => n['@type'] === 'WebSite')) {
+      console.error(`prerender: / lost its WebSite entity`)
+      process.exit(1)
+    }
   }
 
   const outDir = route.path === '/' ? dist : join(dist, route.path)
@@ -235,4 +226,45 @@ ${urls}
 `,
 )
 
-console.log(`prerender ok - ${written.length} routes, one description, nav + contextual links + WebPage schema, sitemap regenerated (${today})`)
+console.log(`prerender ok - ${written.length} routes, one description, explicit sitelinks in <head> + sr-only nav, sitemap regenerated (${today})`)
+
+/** Enrich the JSON-LD with a page-level WebPage + BreadcrumbList, so every
+ *  URL carries its own identity alongside the site-level WebSite. Without it
+ *  the ten routed pages are indistinguishable in the schema. */
+function enrichJsonLd(html, route, url) {
+  const match = html.match(LD_RE)
+  if (!match) {
+    console.error('prerender: no JSON-LD block found in the built HTML')
+    process.exit(1)
+  }
+  const doc = JSON.parse(match[1])
+  const graph = doc['@graph'].filter(
+    (n) => !(n['@type'] === 'WebPage' && n.url === url) && !(n['@type'] === 'BreadcrumbList' && n['@id'] === `${url}#breadcrumb`),
+  )
+  const name = route.title.split(' | ')[0]
+  graph.push({
+    '@type': 'WebPage',
+    '@id': `${url}#webpage`,
+    url,
+    name: route.title,
+    description: route.blurb,
+    isPartOf: { '@id': `${ORIGIN}/#website` },
+    about: { '@id': `${ORIGIN}/#organization` },
+    inLanguage: 'en-AE',
+    breadcrumb: { '@id': `${url}#breadcrumb` },
+  })
+  graph.push({
+    '@type': 'BreadcrumbList',
+    '@id': `${url}#breadcrumb`,
+    itemListElement:
+      route.path === '/'
+        ? [{ '@type': 'ListItem', position: 1, name, item: url }]
+        : [
+            { '@type': 'ListItem', position: 1, name: 'DS Pulse', item: `${ORIGIN}/` },
+            { '@type': 'ListItem', position: 2, name, item: url },
+          ],
+  })
+  doc['@graph'] = graph
+  const block = `<script type="application/ld+json">\n${JSON.stringify(doc, null, 2)}\n    </script>`
+  return html.replace(LD_RE, () => block)
+}

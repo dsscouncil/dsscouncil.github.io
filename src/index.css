@@ -167,3 +167,27 @@ body {
     overflow-x: auto;
   }
 }
+
+/* SELF-HOSTING LAYOUT FIXES (single-file prerender)
+ *
+ * vite-plugin-singlefile inlines the whole app into dist/index.html, so the
+ * ten routes share one DOM and only CSS can carry layout fixes. These are
+ * deliberately tiny so a future SSR build never inherits them: every rule is
+ * a plain element selector with no Tailwind utility, so replacing the stack
+ * with Next/Remix/src-only would leave nothing behind.
+ */
+
+/* 1. Every route's body is one flex column that fills the viewport. */
+main, section, [class*='max-w-7xl'] {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* 2. The page background: the prerendered shell's main column is the only
+ *    place the background ever paints in the single-file build, so this one
+ *    rule is what gives the whole result its own-page background. */
+main {
+  background: #f4f6f8;
+  min-height: 100vh;
+}
