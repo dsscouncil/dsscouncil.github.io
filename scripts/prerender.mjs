@@ -53,7 +53,9 @@ const today = new Date().toISOString().slice(0, 10)
 const written = []
 
 for (const route of ROUTES) {
-  const url = ORIGIN + route.path
+  // GitHub Pages serves a directory as /council/ and 301s /council to it, so the
+  // indexable URL - and therefore the canonical and og:url - carries the slash.
+  const url = ORIGIN + (route.path === '/' ? '/' : route.path + '/')
   let html = shell
   html = swapOnce(html, /<title>[^<]*<\/title>/, `<title>${escapeAttr(route.title)}</title>`, '<title>')
   html = swapOnce(
@@ -109,7 +111,7 @@ copyFileSync(shellPath, join(dist, '404.html'))
 const urls = written
   .map(
     (r) => `  <url>
-    <loc>${ORIGIN}${r.path}</loc>
+    <loc>${ORIGIN}${r.path === '/' ? '/' : r.path + '/'}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${r.changefreq}</changefreq>
     <priority>${r.priority}</priority>
