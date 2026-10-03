@@ -18,25 +18,28 @@ import housePi from '../assets/houses/pi.png'
 import houseOmega from '../assets/houses/omega.png'
 import houseBeta from '../assets/houses/beta.png'
 
+// `colour` is the vivid house shade used for decorative fills. `ink` is a
+// darkened variant of the same hue used wherever the shade appears as TEXT on
+// the white card, so every house label clears the 4.5:1 WCAG AA minimum.
 const HOUSES = [
   {
     name: 'Respect', house: 'Alpha', img: houseAlpha,
-    colour: 'hsl(217 91% 60%)', soft: 'hsl(217 91% 95%)',
+    colour: 'hsl(217 91% 60%)', ink: 'hsl(217 91% 52%)', soft: 'hsl(217 91% 95%)',
     desc: 'Treating every member of our community with dignity — on the field, in class and beyond.',
   },
   {
     name: 'Compassion', house: 'Pi', img: housePi,
-    colour: 'hsl(0 72% 51%)', soft: 'hsl(0 86% 96%)',
+    colour: 'hsl(0 72% 51%)', ink: 'hsl(0 72% 51%)', soft: 'hsl(0 86% 96%)',
     desc: 'Leading with kindness and standing beside those who need support the most.',
   },
   {
     name: 'Empathy', house: 'Omega', img: houseOmega,
-    colour: 'hsl(45 93% 40%)', soft: 'hsl(48 96% 93%)',
+    colour: 'hsl(45 93% 40%)', ink: 'hsl(45 73% 32%)', soft: 'hsl(48 96% 93%)',
     desc: 'Listening first, understanding always — seeing the world through each other\'s eyes.',
   },
   {
     name: 'Integrity', house: 'Beta', img: houseBeta,
-    colour: 'hsl(142 71% 38%)', soft: 'hsl(142 69% 94%)',
+    colour: 'hsl(142 71% 38%)', ink: 'hsl(142 55% 33%)', soft: 'hsl(142 69% 94%)',
     desc: 'Doing the right thing, especially when no one is watching.',
   },
 ]
@@ -198,7 +201,7 @@ export default function About() {
                       <img src={h.img} alt={`${h.house} house symbol`} className="h-11 w-11 object-contain" />
                     </div>
                     <div className="mt-4 font-display text-xl font-bold text-navy">{h.name}</div>
-                    <div className="mt-1 text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: h.colour }}>
+                    <div className="mt-1 text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: h.ink }}>
                       {h.house} House
                     </div>
                     <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{h.desc}</p>
