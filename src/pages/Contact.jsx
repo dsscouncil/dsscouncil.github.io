@@ -97,7 +97,7 @@ export default function Contact() {
                   <div className="text-xs font-semibold uppercase tracking-wide text-white/50">Follow Us</div>
                   <div className="mt-3 space-y-3">
                     <a
-                      href="https://www.instagram.com/dsstudentcouncil"
+                      href="https://www.instagram.com/ds_studentcouncil"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group flex items-center gap-4"
@@ -107,7 +107,7 @@ export default function Contact() {
                       </span>
                       <span>
                         <span className="block text-sm font-semibold text-white group-hover:text-gold transition-colors">Dubai Scholars Student Council</span>
-                        <span className="block text-xs text-white/50">@dsstudentcouncil</span>
+                        <span className="block text-xs text-white/50">@ds_studentcouncil</span>
                       </span>
                     </a>
                     <a
