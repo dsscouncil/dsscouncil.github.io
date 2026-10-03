@@ -17,6 +17,17 @@ function departmentKey(role) {
   return coord ? coord[1] : null
 }
 
+// Fallback team for roles that name no department: a deputy belongs beside the
+// regular role it deputises for, so "Deputy Head Girl" pairs with "Head Girl".
+function deputyFamily(role) {
+  return (role || '')
+    .toLowerCase()
+    .replace(/[^a-z ]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/^deputy /, '')
+}
+
 // The Sports Council is really two teams, Sports and Fitness.
 function councilKey(role) {
   const r = (role || '').toLowerCase()
@@ -25,15 +36,16 @@ function councilKey(role) {
   return null
 }
 
-// House Leadership teams are the houses themselves; everywhere else the team is
-// the department named in the role.
+// House Leadership teams are the houses themselves, the Sports Council splits by
+// sport, and everywhere else the team comes from the role title.
 function teamKey(cat, m) {
   if (cat === 'House Leadership') return (m.house || '').trim() || null
   if (cat === 'Sports Council') return councilKey(m.role)
-  return departmentKey(m.role)
+  return departmentKey(m.role) || deputyFamily(m.role)
 }
 
-// Captain / President / Head outrank Deputy Captain and Coordinator.
+// Captain / President / Head outrank Coordinator, and within any of those a
+// regular role outranks its Deputy.
 function seniority(role) {
   const r = (role || '').toLowerCase()
   const deputy = /^deputy/.test(r) ? 1 : 0
