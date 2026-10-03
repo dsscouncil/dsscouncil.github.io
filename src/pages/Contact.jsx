@@ -19,6 +19,7 @@ const Linkedin = ({ className }) => (
 import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
+import SeeAlso from '../components/SeeAlso.jsx'
 import { useAdmin, YEAR_GROUPS } from '../admin/store.jsx'
 
 const yearOptions = [...YEAR_GROUPS, 'Staff / Parent', 'Prefer not to say']
@@ -201,6 +202,7 @@ export default function Contact() {
           </Reveal>
         </div>
       </section>
+      <SeeAlso path="/contact" />
     </>
   )
 }

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
+import SeeAlso from '../components/SeeAlso.jsx'
 import { useAdmin, MEMBER_CATEGORIES } from '../admin/store.jsx'
 
 // People who work together belong next to each other on the grid, and the most
@@ -181,6 +182,7 @@ export default function Council() {
           )}
         </div>
       </section>
+      <SeeAlso path="/council" />
     </>
   )
 }

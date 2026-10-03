@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { CalendarDays, MapPin, User, Handshake, DollarSign, Palette, PenTool, Dumbbell, Cpu, Mic, Users } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
+import SeeAlso from '../components/SeeAlso.jsx'
 import { useAdmin, YEAR_GROUPS } from '../admin/store.jsx'
 
 const KNOWN_CATEGORIES = ['Academic', 'Sports', 'Creative', 'Technology', 'Community', 'Culture', 'Leadership']
@@ -72,6 +73,7 @@ export default function Clubs() {
           {list.length === 0 && <p className="py-16 text-center text-muted-foreground">No clubs in this category yet.</p>}
         </div>
       </section>
+      <SeeAlso path="/clubs" />
     </>
   )
 }

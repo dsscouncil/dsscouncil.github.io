@@ -17,7 +17,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ROUTES, servedPath, BY_PATH } from '../src/site.js'
+import { ROUTES, servedPath, relatedFor } from '../src/site.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
@@ -40,9 +40,11 @@ const CRAWL_NAV =
 
 /** Contextual links in addition to the flat nav. A nav alone gives Google ten
  *  identical link sets; page-specific links give it varied anchor text and a
- *  link graph that looks like a real site rather than a template. */
+ *  link graph that looks like a real site rather than a template. The same
+ *  three links render visibly at the foot of the page via <SeeAlso/> - this is
+ *  the copy that is in the served HTML before JavaScript runs. */
 const relatedNav = (route) => {
-  const links = (route.related || []).map((p) => BY_PATH.get(p)).filter(Boolean)
+  const links = relatedFor(route.path)
   if (!links.length) return ''
   return (
     '<nav class="sr-only" aria-label="Related pages"><ul>' +
@@ -77,6 +79,10 @@ function enrichJsonLd(html, route, url) {
     '@id': `${url}#webpage`,
     url,
     name: route.title,
+    // The one shared meta description is deliberately NOT repeated here: this is
+    // a per-URL summary, so a crawler can tell the ten pages apart by content
+    // rather than by title alone.
+    description: route.blurb,
     isPartOf: { '@id': `${ORIGIN}/#website` },
     about: { '@id': `${ORIGIN}/#organization` },
     inLanguage: 'en-AE',
@@ -179,9 +185,9 @@ for (const route of ROUTES) {
       process.exit(1)
     }
   }
-  for (const p of route.related || []) {
-    if (!html.includes(`>${escapeAttr(BY_PATH.get(p).label)}</a>`)) {
-      console.error(`prerender: ${route.path} is missing its contextual link to ${p}`)
+  for (const t of relatedFor(route.path)) {
+    if (!html.includes(`>${escapeAttr(t.label)}</a>`)) {
+      console.error(`prerender: ${route.path} is missing its contextual link to ${t.path}`)
       process.exit(1)
     }
   }
@@ -192,6 +198,10 @@ for (const route of ROUTES) {
   const page = ld['@graph'].find((n) => n['@type'] === 'WebPage' && n.url === url)
   if (!page || !ld['@graph'].some((n) => n['@type'] === 'WebSite')) {
     console.error(`prerender: ${route.path} lost its WebSite or WebPage entity`)
+    process.exit(1)
+  }
+  if (page.description !== route.blurb) {
+    console.error(`prerender: ${route.path} lost its own WebPage description`)
     process.exit(1)
   }
 

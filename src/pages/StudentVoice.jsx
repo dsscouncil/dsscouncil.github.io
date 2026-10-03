@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { MessageCircle, ShieldCheck, Paperclip, X, Loader2, AlertCircle } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
+import SeeAlso from '../components/SeeAlso.jsx'
 import { useAdmin, YEAR_GROUPS, VOICE_CATEGORIES, VOICE_PRIORITIES } from '../admin/store.jsx'
 import { MAX_UPLOAD_MB } from '../admin/supabase.js'
 
@@ -214,6 +215,7 @@ export default function StudentVoice() {
           </Reveal>
         </div>
       </section>
+      <SeeAlso path="/student-voice" />
     </>
   )
 }

@@ -1,4 +1,5 @@
 import logoUrl from '../assets/logo.png'
+import { ROUTES } from '../site.js'
 
 export const LOGO = logoUrl
 
@@ -24,18 +25,17 @@ export const IMG = {
     .join(', '),
 }
 
-export const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Our Council', href: '/council' },
-  { label: 'Initiatives', href: '/initiatives' },
-  { label: 'Events', href: '/events' },
-  { label: 'Student Voice', href: '/student-voice' },
-  { label: 'Clubs', href: '/clubs' },
-  { label: 'Contact', href: '/contact' },
-]
+// Both lists come from the route table in site.js rather than being written out
+// here, so a link can never point at a page whose name has drifted away from
+// its <title>.
+//
+// The header uses the short navLabel because the bar is already crowded. The
+// footer uses each section's full label - the exact words that page uses as its
+// title - because that is the wording Google is most likely to reuse when it
+// shows a sitelink.
+export const navLinks = ROUTES.filter((r) => r.nav).map((r) => ({ label: r.navLabel, href: r.path }))
 
-export const footerLinks = [...navLinks, { label: 'News', href: '/news' }, { label: 'Documents', href: '/documents' }]
+export const footerLinks = ROUTES.map((r) => ({ label: r.label, href: r.path }))
 
 export const stats = [
   { value: '3', label: 'Years 9–11', sub: 'Secondary Representation' },

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { CalendarPlus, CalendarDays, MapPin, Users, Clock } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
+import SeeAlso from '../components/SeeAlso.jsx'
 import { useAdmin } from '../admin/store.jsx'
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
@@ -245,6 +246,7 @@ export default function Events() {
           )}
         </div>
       </section>
+      <SeeAlso path="/events" />
     </>
   )
 }

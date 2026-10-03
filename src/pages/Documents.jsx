@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { FileText, ExternalLink } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
+import SeeAlso from '../components/SeeAlso.jsx'
 import { useAdmin } from '../admin/store.jsx'
 
 export default function Documents() {
@@ -71,6 +72,7 @@ export default function Documents() {
           )}
         </div>
       </section>
+      <SeeAlso path="/documents" />
     </>
   )
 }

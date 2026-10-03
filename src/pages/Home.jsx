@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, MessageCircle, ExternalLink } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import PulseMark from '../components/PulseMark.jsx'
+import SeeAlso from '../components/SeeAlso.jsx'
 import { IMG, LOGO } from '../data/content.js'
 import { useAdmin } from '../admin/store.jsx'
 
@@ -236,6 +237,7 @@ export default function Home() {
           </Reveal>
         </div>
       </section>
+      <SeeAlso path="/" />
     </>
   )
 }

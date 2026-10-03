@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { ArrowRight, CalendarDays, User, Search, X } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
+import SeeAlso from '../components/SeeAlso.jsx'
 import { useAdmin } from '../admin/store.jsx'
 
 export default function News() {
@@ -120,6 +121,7 @@ export default function News() {
           </div>
         </div>
       )}
+      <SeeAlso path="/news" />
     </>
   )
 }

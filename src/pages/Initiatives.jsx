@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
+import SeeAlso from '../components/SeeAlso.jsx'
 import { useAdmin } from '../admin/store.jsx'
 
 const STATUS_STYLES = {
@@ -77,6 +78,7 @@ export default function Initiatives() {
           )}
         </div>
       </section>
+      <SeeAlso path="/initiatives" />
     </>
   )
 }

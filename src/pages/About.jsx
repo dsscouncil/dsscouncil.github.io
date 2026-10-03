@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Quote } from 'lucide-react'
 import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
+import SeeAlso from '../components/SeeAlso.jsx'
 import { useAdmin } from '../admin/store.jsx'
 
 const RING_STYLES = {
@@ -247,6 +248,7 @@ export default function About() {
           </Reveal>
         </div>
       </section>
+      <SeeAlso path="/about" />
     </>
   )
 }
