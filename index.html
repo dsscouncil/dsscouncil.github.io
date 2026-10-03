@@ -4,7 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Primary SEO -->
+    <!-- Primary SEO
+         ONE description string, repeated verbatim in og:description,
+         twitter:description and manifest.webmanifest. Search engines, WhatsApp,
+         X and the installed PWA otherwise each quote a different sentence, which
+         is what makes the same link look like a different page everywhere.
+         `npm run check:meta` fails if the four ever drift apart again. -->
     <title>DS Secondary Student Council | DS Pulse</title>
     <link rel="icon" type="image/png" href="./favicon-v2.png" />
     <!-- Conventional paths too: crawlers, preview generators and older tools
@@ -13,7 +18,7 @@
     <link rel="icon" href="./favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="manifest" href="./manifest.webmanifest" />
-    <meta name="description" content="DS Secondary Student Council (DS Pulse) — the official student council of Dubai Scholars Private School. Proactive Union for Leadership & Student Empowerment. We Don't Just Represent. We Deliver. Meet the council, explore clubs, events and initiatives, and share your voice." />
+    <meta name="description" content="DS Pulse — the official Secondary Student Council of Dubai Scholars Private School. Proactive Union for Leadership & Student Empowerment." />
     <meta name="keywords" content="Dubai Scholars, Dubai Scholars Private School, Secondary Student Council, DS Student Council, DS Pulse, PULSE, Proactive Union for Leadership and Student Empowerment, student government Dubai, school clubs, student voice" />
     <meta name="author" content="Dubai Scholars Secondary Student Council" />
     <meta name="robots" content="index, follow" />
@@ -22,10 +27,10 @@
 
     <!-- Open Graph (WhatsApp, Facebook, LinkedIn, Instagram DMs) -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="DS Secondary Student Council" />
+    <meta property="og:site_name" content="DS Pulse" />
     <meta property="og:url" content="https://www.ds-pulse.com/" />
-    <meta property="og:title" content="DS Secondary Student Council" />
-    <meta property="og:description" content="DS Pulse — Proactive Union for Leadership & Student Empowerment. We Don't Just Represent. We Deliver." />
+    <meta property="og:title" content="DS Secondary Student Council | DS Pulse" />
+    <meta property="og:description" content="DS Pulse — the official Secondary Student Council of Dubai Scholars Private School. Proactive Union for Leadership & Student Empowerment." />
     <meta property="og:image" content="https://www.ds-pulse.com/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -34,8 +39,8 @@
 
     <!-- Twitter/X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DS Secondary Student Council" />
-    <meta name="twitter:description" content="DS Pulse — Proactive Union for Leadership & Student Empowerment. We Don't Just Represent. We Deliver." />
+    <meta name="twitter:title" content="DS Secondary Student Council | DS Pulse" />
+    <meta name="twitter:description" content="DS Pulse — the official Secondary Student Council of Dubai Scholars Private School. Proactive Union for Leadership & Student Empowerment." />
     <meta name="twitter:image" content="https://www.ds-pulse.com/og-image.png" />
 
     <!-- Structured data for Google -->
