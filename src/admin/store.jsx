@@ -42,20 +42,32 @@ export function AdminProvider({ children }) {
     refresh()
   }, [])
 
-  // Validate persisted session on load
+  // Validate persisted session on load, and keep the stored role in sync with
+  // the database so a role change takes effect without signing in again.
   useEffect(() => {
     if (!session) return
-    adminValidate(session.token).then((username) => {
-      if (!username) {
+    adminValidate(session.token).then((info) => {
+      if (!info) {
         setSession(null)
         localStorage.removeItem(SESSION_KEY)
+        return
+      }
+      if (info.role !== session.role) {
+        const next = { ...session, role: info.role }
+        setSession(next)
+        localStorage.setItem(SESSION_KEY, JSON.stringify(next))
       }
     })
   }, [])
 
+  const canEdit = session?.role !== 'viewer'
+
   const actions = useMemo(() => {
     const persist = async (collection, op, id, item) => {
       if (!session?.token) throw new Error('Not signed in')
+      // The database rejects writes for viewer accounts regardless; failing
+      // here just avoids a pointless round trip and gives a clearer message.
+      if (session.role === 'viewer') throw new Error('Your account has read-only access')
       const dbRow = op === 'delete' ? null : toDbRow(collection, item)
       const result = await adminWrite(session.token, COLLECTIONS[collection].table, op, id, dbRow)
       return result
@@ -106,17 +118,21 @@ export function AdminProvider({ children }) {
 
       // ── settings (singleton) ──
       setSettings: async (patch) => {
+        if (session.role === 'viewer') throw new Error('Your account has read-only access')
         const merged = { ...data.settings, ...patch }
         await adminWrite(session.token, 'site_settings', 'update', null, merged)
         setData((d) => ({ ...d, settings: { ...d.settings, ...merged } }))
       },
 
       // ── accounts (server-side, gated by session) ──
-      manageAccount: (action, username, password, displayName) =>
-        adminManageAccount(session.token, action, username, password, displayName),
+      manageAccount: (action, username, password, displayName) => {
+        if (session.role === 'viewer') throw new Error('Your account has read-only access')
+        return adminManageAccount(session.token, action, username, password, displayName)
+      },
 
       // ── import / rollover: bulk replace content ──
       resetContent: async (payload) => {
+        if (session.role === 'viewer') throw new Error('Your account has read-only access')
         await adminResetContent(session.token, payload)
         await refresh()
       },
@@ -154,7 +170,7 @@ export function AdminProvider({ children }) {
 
   // App-model convenience aliases used by existing pages
   const value = useMemo(() => {
-    if (!data) return { data: null, error, session, loading: true, ...actions }
+    if (!data) return { data: null, error, session, loading: true, canEdit, ...actions }
     const siteContent = {
       stats: data.stats,
       pillars: data.pillars,
@@ -170,8 +186,8 @@ export function AdminProvider({ children }) {
       aboutText: data.settings.aboutText,
       homeQuote: data.settings.homeQuote,
     }
-    return { data: { ...data, siteContent, accounts: [] }, error, session, loading: false, ...actions }
-  }, [data, error, session, actions])
+    return { data: { ...data, siteContent, accounts: [] }, error, session, loading: false, canEdit, ...actions }
+  }, [data, error, session, actions, canEdit])
 
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>
 }

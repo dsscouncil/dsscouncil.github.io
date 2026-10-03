@@ -3,13 +3,13 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import {
   LayoutGrid, MessageSquareHeart, Users, Megaphone, CalendarDays, UsersRound,
   MoreHorizontal, ChevronDown, ChevronUp, Newspaper, FileText, Target, Quote, Settings,
-  LogOut, ExternalLink, Mail,
+  LogOut, ExternalLink, Mail, Eye,
 } from 'lucide-react'
 import { useAdmin } from './store.jsx'
 import { LOGO } from '../data/content.js'
 
 export default function AdminLayout() {
-  const { data, session, logout } = useAdmin()
+  const { data, session, logout, canEdit } = useAdmin()
   const [moreOpen, setMoreOpen] = useState(true)
   const navigate = useNavigate()
 
@@ -50,6 +50,12 @@ export default function AdminLayout() {
             </Link>
           </div>
           <div className="flex items-center gap-4">
+            {session && !canEdit && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-navy/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-navy ring-1 ring-navy/20">
+                <Eye className="h-3.5 w-3.5" />
+                Read only
+              </span>
+            )}
             <span className="hidden text-sm text-muted-foreground sm:block">
               {session ? (session.name || session.username) : 'Admin'}
             </span>
@@ -120,6 +126,16 @@ export default function AdminLayout() {
 
         {/* Content */}
         <main className="min-w-0 flex-1 pb-16">
+          {!canEdit && (
+            <div className="mb-6 flex items-start gap-3 rounded-2xl border border-gold/40 bg-gold/10 p-4 text-sm text-navy">
+              <Eye className="mt-0.5 h-5 w-5 shrink-0 text-navy" />
+              <p>
+                <span className="font-semibold">You have read-only access.</span>{' '}
+                You can view everything in the console, but adding, editing and deleting are disabled.
+                Ask an editor account holder if something needs changing.
+              </p>
+            </div>
+          )}
           {/* Mobile console nav (sidebar is hidden below lg) */}
           <div className="lg:hidden -mt-2 mb-6 -mx-1 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}">
             {[...main, ...more].map(({ to, label, end }) => (
@@ -137,7 +153,9 @@ export default function AdminLayout() {
               </NavLink>
             ))}
           </div>
-          <Outlet />
+          <div data-readonly={!canEdit}>
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

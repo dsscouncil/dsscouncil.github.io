@@ -4,7 +4,7 @@ import { useAdmin } from '../store.jsx'
 import { Modal, PageHead, Field, inputCls } from '../ui.jsx'
 
 export default function ContactMessages() {
-  const { data, update, remove } = useAdmin()
+  const { data, update, remove, canEdit } = useAdmin()
   const [filter, setFilter] = useState('All')
   const [managing, setManaging] = useState(null)
   const [confirmId, setConfirmId] = useState(null)
@@ -74,13 +74,14 @@ export default function ContactMessages() {
                     ? 'bg-surface text-navy/70 border border-border hover:text-navy'
                     : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                 }`}
+                data-write
               >
                 {m.handled ? 'Mark Open' : 'Mark Handled'}
               </button>
               <button onClick={() => setManaging(m)} className="rounded-full border border-border px-5 py-2 text-xs font-semibold text-navy hover:border-gold transition-colors">
                 Manage
               </button>
-              <button onClick={() => setConfirmId(m.id)} aria-label="Delete message" className="ml-auto flex h-9 w-9 items-center justify-center rounded-full text-red-500 transition-colors hover:bg-red-50">
+              <button onClick={() => setConfirmId(m.id)} aria-label="Delete message" className="ml-auto flex h-9 w-9 items-center justify-center rounded-full text-red-500 transition-colors hover:bg-red-50" data-write>
                 <Trash2 className="h-4 w-4" />
               </button>
             </div>
@@ -102,14 +103,15 @@ export default function ContactMessages() {
               <p className="mt-3 whitespace-pre-line text-muted-foreground">{managing.message}</p>
             </div>
             <Field label="Subject">
-              <input className={inputCls} value={managing.subject || ''} onChange={(e) => setManaging({ ...managing, subject: e.target.value })} />
+              <input disabled={!canEdit} className={inputCls} value={managing.subject || ''} onChange={(e) => setManaging({ ...managing, subject: e.target.value })} />
             </Field>
             <Field label="Council Notes (private)">
-              <textarea rows={3} className={inputCls} value={managing.notes || ''} onChange={(e) => setManaging({ ...managing, notes: e.target.value })} placeholder="Internal notes about this message…" />
+              <textarea disabled={!canEdit} rows={3} className={inputCls} value={managing.notes || ''} onChange={(e) => setManaging({ ...managing, notes: e.target.value })} placeholder="Internal notes about this message…" />
             </Field>
             <button
               onClick={() => { update('contactMessages', managing.id, managing); setManaging(null) }}
               className="w-full rounded-full bg-navy px-6 py-3 text-sm font-semibold text-white hover:bg-navy-deep transition-colors"
+              data-write
             >
               Save Changes
             </button>
@@ -121,8 +123,8 @@ export default function ContactMessages() {
         <Modal title="Delete message?" onClose={() => setConfirmId(null)}>
           <p className="text-sm text-muted-foreground">This will permanently remove the message from the dashboard.</p>
           <div className="mt-6 flex gap-3">
-            <button onClick={() => setConfirmId(null)} className="flex-1 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-navy">Cancel</button>
-            <button onClick={() => { remove('contactMessages', confirmId); setConfirmId(null) }} className="flex-1 rounded-full bg-red-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600">Delete</button>
+            <button onClick={() => setConfirmId(null)} className="flex-1 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-navy" data-write>Cancel</button>
+            <button onClick={() => { remove('contactMessages', confirmId); setConfirmId(null) }} className="flex-1 rounded-full bg-red-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600" data-write>Delete</button>
           </div>
         </Modal>
       )}

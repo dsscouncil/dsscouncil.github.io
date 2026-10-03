@@ -4,7 +4,7 @@ import { useAdmin } from '../store.jsx'
 import { Modal, PageHead, Field, inputCls } from '../ui.jsx'
 
 function VoiceAnalytics() {
-  const { data } = useAdmin()
+  const { data, canEdit } = useAdmin()
   const subs = data.submissions
   const tally = (key) => {
     const map = {}
@@ -55,7 +55,7 @@ function VoiceAnalytics() {
 }
 
 function DataManager() {
-  const { data, setSettings, exportJson, importJson } = useAdmin()
+  const { data, setSettings, exportJson, importJson, canEdit } = useAdmin()
   const fileRef = useRef(null)
   const [confirmReset, setConfirmReset] = useState(false)
   const [importError, setImportError] = useState('')
@@ -90,15 +90,15 @@ function DataManager() {
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
         <Field label="Academic Year (shown across the site)">
           <div className="flex gap-2">
-            <input className={inputCls} value={year} onChange={(e) => { setYear(e.target.value); setSavedYear(false) }} />
-            <button onClick={() => { setSettings({ year: year.trim() || data.settings.year }); setSavedYear(true); setTimeout(() => setSavedYear(false), 1500) }}
-              className="shrink-0 rounded-xl bg-navy px-5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors">
+            <input className={inputCls} disabled={!canEdit} value={year} onChange={(e) => { setYear(e.target.value); setSavedYear(false) }} />
+            <button disabled={!canEdit} onClick={() => { setSettings({ year: year.trim() || data.settings.year }); setSavedYear(true); setTimeout(() => setSavedYear(false), 1500) }}
+              className="shrink-0 rounded-xl bg-navy px-5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors disabled:opacity-40">
               {savedYear ? <Check className="h-4 w-4" /> : 'Save'}
             </button>
           </div>
         </Field>
         <Field label="Council Email (shown in footer & contact)">
-          <input className={inputCls} defaultValue={data.settings.councilEmail} onBlur={(e) => setSettings({ councilEmail: e.target.value.trim() })} />
+          <input className={inputCls} disabled={!canEdit} defaultValue={data.settings.councilEmail} onBlur={(e) => setSettings({ councilEmail: e.target.value.trim() })} />
         </Field>
       </div>
 
@@ -106,10 +106,10 @@ function DataManager() {
         <button onClick={exportJson} className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-semibold text-navy hover:border-gold transition-colors">
           <Download className="h-4 w-4" /> Export JSON
         </button>
-        <button disabled={importing} onClick={() => fileRef.current?.click()} className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-semibold text-navy hover:border-gold transition-colors disabled:opacity-50">
+        <button disabled={importing} onClick={() => fileRef.current?.click()} className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-semibold text-navy hover:border-gold transition-colors disabled:opacity-50" data-write>
           {importing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />} {importing ? 'Restoring…' : 'Import JSON'}
         </button>
-        <button onClick={() => setConfirmReset(true)} className="inline-flex items-center justify-center gap-2 rounded-full bg-red-50 border border-red-200 px-5 py-3 text-sm font-semibold text-red-600 hover:bg-red-100 transition-colors">
+        <button onClick={() => setConfirmReset(true)} className="inline-flex items-center justify-center gap-2 rounded-full bg-red-50 border border-red-200 px-5 py-3 text-sm font-semibold text-red-600 hover:bg-red-100 transition-colors" data-write>
           <RotateCcw className="h-4 w-4" /> Restore from Backup
         </button>
         <input ref={fileRef} type="file" accept="application/json" hidden onChange={onImport} />
@@ -125,7 +125,7 @@ function DataManager() {
           <p className="text-sm text-muted-foreground">Choose the JSON export you want to restore. This replaces all site content (members, initiatives, events, clubs, news, documents, quotes, stats, pillars, ideas and settings) with the file's contents. Submissions and admin accounts are not affected.</p>
           <div className="mt-6 flex gap-3">
             <button onClick={() => setConfirmReset(false)} className="flex-1 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-navy">Cancel</button>
-            <button onClick={() => { setConfirmReset(false); fileRef.current?.click() }} className="flex-1 rounded-full bg-navy px-5 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep">Choose file…</button>
+            <button onClick={() => { setConfirmReset(false); fileRef.current?.click() }} className="flex-1 rounded-full bg-navy px-5 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep" data-write>Choose file…</button>
           </div>
         </Modal>
       )}

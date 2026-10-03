@@ -4,7 +4,7 @@ import { useAdmin, VOICE_STATUSES } from '../store.jsx'
 import { Modal, PageHead, StatusPill, Chip, Field, inputCls } from '../ui.jsx'
 
 export default function Voice() {
-  const { data, update, remove } = useAdmin()
+  const { data, update, remove, canEdit } = useAdmin()
   const [filter, setFilter] = useState('All')
   const [managing, setManaging] = useState(null)
   const [confirmId, setConfirmId] = useState(null)
@@ -54,17 +54,18 @@ export default function Voice() {
               </a>
             )}
             <div className="mt-5 flex flex-wrap items-center gap-2">
-              <select value={s.status} onChange={(e) => update('submissions', s.id, { status: e.target.value })}
+              <select disabled={!canEdit} value={s.status} onChange={(e) => update('submissions', s.id, { status: e.target.value })}
                 className="rounded-full border border-border bg-white px-4 py-2 text-xs font-semibold text-navy focus:outline-none focus:ring-2 focus:ring-gold/50">
                 {VOICE_STATUSES.map((v) => <option key={v}>{v}</option>)}
               </select>
               <button onClick={() => setManaging(s)} className="rounded-full border border-border px-5 py-2 text-xs font-semibold text-navy hover:border-gold transition-colors">Manage</button>
               <button onClick={() => update('submissions', s.id, { published: !s.published })}
-                className={`inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-xs font-semibold transition-colors ${s.published ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-surface text-navy/70 border border-border hover:text-navy'}`}>
+                className={`inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-xs font-semibold transition-colors ${s.published ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-surface text-navy/70 border border-border hover:text-navy'}`}
+                data-write>
                 {s.published ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
                 {s.published ? 'Published' : 'Publish'}
               </button>
-              <button onClick={() => setConfirmId(s.id)} aria-label="Delete submission" className="ml-auto h-9 w-9 rounded-full text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors">
+              <button onClick={() => setConfirmId(s.id)} aria-label="Delete submission" className="ml-auto h-9 w-9 rounded-full text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors" data-write>
                 <Trash2 className="h-4 w-4" />
               </button>
             </div>
@@ -75,18 +76,18 @@ export default function Voice() {
       {managing && (
         <Modal title="Manage Submission" onClose={() => setManaging(null)}>
           <div className="space-y-4">
-            <Field label="Title"><input className={inputCls} value={managing.title} onChange={(e) => setManaging({ ...managing, title: e.target.value })} /></Field>
-            <Field label="Description"><textarea rows={4} className={inputCls} value={managing.description} onChange={(e) => setManaging({ ...managing, description: e.target.value })} /></Field>
+            <Field label="Title"><input disabled={!canEdit} className={inputCls} value={managing.title} onChange={(e) => setManaging({ ...managing, title: e.target.value })} /></Field>
+            <Field label="Description"><textarea disabled={!canEdit} rows={4} className={inputCls} value={managing.description} onChange={(e) => setManaging({ ...managing, description: e.target.value })} /></Field>
             <div className="grid grid-cols-2 gap-4">
               <Field label="Status">
-                <select className={inputCls} value={managing.status} onChange={(e) => setManaging({ ...managing, status: e.target.value })}>
+                <select disabled={!canEdit} className={inputCls} value={managing.status} onChange={(e) => setManaging({ ...managing, status: e.target.value })}>
                   {VOICE_STATUSES.map((v) => <option key={v}>{v}</option>)}
                 </select>
               </Field>
-              <Field label="Category"><input className={inputCls} value={managing.category} onChange={(e) => setManaging({ ...managing, category: e.target.value })} /></Field>
+              <Field label="Category"><input disabled={!canEdit} className={inputCls} value={managing.category} onChange={(e) => setManaging({ ...managing, category: e.target.value })} /></Field>
             </div>
             <Field label="Council Notes (private)">
-              <textarea rows={3} className={inputCls} value={managing.notes || ''} onChange={(e) => setManaging({ ...managing, notes: e.target.value })} placeholder="Internal notes about this submission…" />
+              <textarea disabled={!canEdit} rows={3} className={inputCls} value={managing.notes || ''} onChange={(e) => setManaging({ ...managing, notes: e.target.value })} placeholder="Internal notes about this submission…" />
             </Field>
             {managing.file && (
               <a
@@ -105,6 +106,7 @@ export default function Voice() {
             <button
               onClick={() => { update('submissions', managing.id, managing); setManaging(null) }}
               className="w-full rounded-full bg-navy px-6 py-3 text-sm font-semibold text-white hover:bg-navy-deep transition-colors"
+              data-write
             >
               Save Changes
             </button>
@@ -116,8 +118,8 @@ export default function Voice() {
         <Modal title="Delete submission?" onClose={() => setConfirmId(null)}>
           <p className="text-sm text-muted-foreground">This will permanently remove the submission from the dashboard.</p>
           <div className="mt-6 flex gap-3">
-            <button onClick={() => setConfirmId(null)} className="flex-1 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-navy">Cancel</button>
-            <button onClick={() => { remove('submissions', confirmId); setConfirmId(null) }} className="flex-1 rounded-full bg-red-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600">Delete</button>
+            <button onClick={() => setConfirmId(null)} className="flex-1 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-navy" data-write>Cancel</button>
+            <button onClick={() => { remove('submissions', confirmId); setConfirmId(null) }} className="flex-1 rounded-full bg-red-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600" data-write>Delete</button>
           </div>
         </Modal>
       )}

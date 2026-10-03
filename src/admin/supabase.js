@@ -220,14 +220,21 @@ export async function adminLogin(username, password) {
   const { data, error } = await supabase.rpc('admin_login', { p_username: username, p_password: password })
   if (error) throw new Error(error.message)
   const row = Array.isArray(data) ? data[0] : data
-  return { token: row.token, name: row.display_name || username, username }
+  return {
+    token: row.token,
+    name: row.display_name || username,
+    username,
+    // 'viewer' accounts can read the dashboard but every write is rejected
+    // server-side by admin_require_editor(); this only drives the UI.
+    role: row.role || 'editor',
+  }
 }
 
 export async function adminValidate(token) {
   try {
-    const { data, error } = await supabase.rpc('admin_validate_session', { p_token: token })
-    if (error) return null
-    return data || null
+    const { data, error } = await supabase.rpc('admin_session_role', { p_token: token })
+    if (error || !data) return null
+    return { role: typeof data === 'string' ? data : data.role || 'editor' }
   } catch {
     return null
   }

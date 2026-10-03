@@ -21,7 +21,7 @@ export default function Clubs() {
   return (
     <div>
       <PageHead title="Clubs & Activities" sub={`Manage the club directory shown on the site · ${data.settings.year}`}>
-        <button onClick={() => setEditing({ ...EMPTY, isNew: true })} className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors">
+        <button onClick={() => setEditing({ ...EMPTY, isNew: true })} className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors" data-write>
           <Plus className="h-4 w-4" /> Add Club
         </button>
       </PageHead>
@@ -38,10 +38,10 @@ export default function Clubs() {
             <h3 className="mt-3 font-display text-lg font-bold text-navy">{c.name}</h3>
             <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">{c.description}</p>
             <div className="mt-5 flex gap-2">
-              <button onClick={() => setEditing({ ...c, isNew: false })} className="inline-flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-xs font-semibold text-navy hover:bg-border transition-colors">
+              <button onClick={() => setEditing({ ...c, isNew: false })} className="inline-flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-xs font-semibold text-navy hover:bg-border transition-colors" data-write>
                 <Pencil className="h-3.5 w-3.5" /> Edit
               </button>
-              <button onClick={() => setConfirmId(c.id)} className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-4 py-2 text-xs font-semibold text-red-500 hover:bg-red-100 transition-colors">
+              <button onClick={() => setConfirmId(c.id)} className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-4 py-2 text-xs font-semibold text-red-500 hover:bg-red-100 transition-colors" data-write>
                 <Trash2 className="h-3.5 w-3.5" /> Delete
               </button>
             </div>
@@ -66,7 +66,7 @@ export default function Clubs() {
             </div>
             <div className="flex gap-3 pt-2">
               <button onClick={() => setEditing(null)} className="flex-1 rounded-full border border-border px-5 py-3 text-sm font-semibold text-navy hover:bg-surface transition-colors">Cancel</button>
-              <button onClick={() => { const { isNew, id, ...fields } = editing; isNew ? add('clubs', fields) : update('clubs', id, fields); setEditing(null) }} disabled={!editing.name} className="flex-1 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-deep transition-colors disabled:opacity-40">Save</button>
+              <button onClick={() => { const { isNew, id, ...fields } = editing; isNew ? add('clubs', fields) : update('clubs', id, fields); setEditing(null) }} disabled={!editing.name} className="flex-1 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-deep transition-colors disabled:opacity-40" data-write>Save</button>
             </div>
           </div>
         </Modal>
@@ -76,8 +76,8 @@ export default function Clubs() {
         <Modal title="Delete club?" onClose={() => setConfirmId(null)}>
           <p className="text-sm text-muted-foreground">This will remove the club from the site immediately.</p>
           <div className="mt-6 flex gap-3">
-            <button onClick={() => setConfirmId(null)} className="flex-1 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-navy">Cancel</button>
-            <button onClick={() => { remove('clubs', confirmId); setConfirmId(null) }} className="flex-1 rounded-full bg-red-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600">Delete</button>
+            <button onClick={() => setConfirmId(null)} className="flex-1 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-navy" data-write>Cancel</button>
+            <button onClick={() => { remove('clubs', confirmId); setConfirmId(null) }} className="flex-1 rounded-full bg-red-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600" data-write>Delete</button>
           </div>
         </Modal>
       )}

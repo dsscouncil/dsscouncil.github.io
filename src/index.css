@@ -66,6 +66,13 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Read-only admin accounts: every control that writes to the database is
+   tagged data-write by the admin pages and hidden here. The database rejects
+   the write regardless (admin_require_editor), this just keeps the UI honest. */
+[data-readonly='true'] [data-write] {
+  display: none;
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--color-surface);

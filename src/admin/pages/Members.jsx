@@ -50,7 +50,7 @@ export default function Members() {
           <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search…" className="w-56 rounded-full border border-border bg-white py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-gold/60" />
         </div>
-        <button onClick={openNew} className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors">
+        <button onClick={openNew} className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors" data-write>
           <Plus className="h-4 w-4" /> Add Member
         </button>
       </PageHead>
@@ -68,10 +68,10 @@ export default function Members() {
               </div>
             </div>
             <div className="mt-5 flex gap-2">
-              <button onClick={() => openEdit(m)} className="inline-flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-xs font-semibold text-navy hover:bg-border transition-colors">
+              <button onClick={() => openEdit(m)} className="inline-flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-xs font-semibold text-navy hover:bg-border transition-colors" data-write>
                 <Pencil className="h-3.5 w-3.5" /> Edit
               </button>
-              <button onClick={() => setConfirmId(m.id)} className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-4 py-2 text-xs font-semibold text-red-500 hover:bg-red-100 transition-colors">
+              <button onClick={() => setConfirmId(m.id)} className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-4 py-2 text-xs font-semibold text-red-500 hover:bg-red-100 transition-colors" data-write>
                 <Trash2 className="h-3.5 w-3.5" /> Delete
               </button>
             </div>
@@ -118,7 +118,7 @@ export default function Members() {
             </Field>
             <div className="flex gap-3 pt-2">
               <button onClick={() => setEditing(null)} className="flex-1 rounded-full border border-border px-5 py-3 text-sm font-semibold text-navy hover:bg-surface transition-colors">Cancel</button>
-              <button onClick={save} disabled={!editing.name || !editing.role} className="flex-1 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-deep transition-colors disabled:opacity-40">
+              <button onClick={save} disabled={!editing.name || !editing.role} className="flex-1 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-deep transition-colors disabled:opacity-40" data-write>
                 {editing.isNew ? 'Add Member' : 'Save Changes'}
               </button>
             </div>
@@ -130,8 +130,8 @@ export default function Members() {
         <Modal title="Remove member?" onClose={() => setConfirmId(null)}>
           <p className="text-sm text-muted-foreground">The profile will be removed from the Our Council page immediately.</p>
           <div className="mt-6 flex gap-3">
-            <button onClick={() => setConfirmId(null)} className="flex-1 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-navy">Cancel</button>
-            <button onClick={() => { remove('members', confirmId); setConfirmId(null) }} className="flex-1 rounded-full bg-red-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600">Delete</button>
+            <button onClick={() => setConfirmId(null)} className="flex-1 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-navy" data-write>Cancel</button>
+            <button onClick={() => { remove('members', confirmId); setConfirmId(null) }} className="flex-1 rounded-full bg-red-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600" data-write>Delete</button>
           </div>
         </Modal>
       )}

@@ -16,7 +16,7 @@ export default function Events() {
   return (
     <div>
       <PageHead title="Events" sub={`Manage upcoming Council events and campaigns · ${data.settings.year}`}>
-        <button onClick={() => setEditing({ ...EMPTY, isNew: true })} className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors">
+        <button onClick={() => setEditing({ ...EMPTY, isNew: true })} className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors" data-write>
           <Plus className="h-4 w-4" /> Add Event
         </button>
       </PageHead>
@@ -37,10 +37,10 @@ export default function Events() {
               </div>
             </div>
             <div className="flex gap-2">
-              <button onClick={() => setEditing({ ...e, isNew: false })} className="inline-flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-xs font-semibold text-navy hover:bg-border transition-colors">
+              <button onClick={() => setEditing({ ...e, isNew: false })} className="inline-flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-xs font-semibold text-navy hover:bg-border transition-colors" data-write>
                 <Pencil className="h-3.5 w-3.5" /> Edit
               </button>
-              <button onClick={() => setConfirmId(e.id)} className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-4 py-2 text-xs font-semibold text-red-500 hover:bg-red-100 transition-colors">
+              <button onClick={() => setConfirmId(e.id)} className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-4 py-2 text-xs font-semibold text-red-500 hover:bg-red-100 transition-colors" data-write>
                 <Trash2 className="h-3.5 w-3.5" /> Delete
               </button>
             </div>
@@ -65,7 +65,7 @@ export default function Events() {
             <Field label="Description"><textarea rows={3} className={inputCls} value={editing.description || ''} onChange={set('description')} /></Field>
             <div className="flex gap-3 pt-2">
               <button onClick={() => setEditing(null)} className="flex-1 rounded-full border border-border px-5 py-3 text-sm font-semibold text-navy hover:bg-surface transition-colors">Cancel</button>
-              <button onClick={() => { const { isNew, id, ...fields } = editing; isNew ? add('events', fields) : update('events', id, fields); setEditing(null) }} disabled={!editing.title} className="flex-1 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-deep transition-colors disabled:opacity-40">Save</button>
+              <button onClick={() => { const { isNew, id, ...fields } = editing; isNew ? add('events', fields) : update('events', id, fields); setEditing(null) }} disabled={!editing.title} className="flex-1 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white hover:bg-navy-deep transition-colors disabled:opacity-40" data-write>Save</button>
             </div>
           </div>
         </Modal>
@@ -75,8 +75,8 @@ export default function Events() {
         <Modal title="Delete event?" onClose={() => setConfirmId(null)}>
           <p className="text-sm text-muted-foreground">This will remove the event from the site immediately.</p>
           <div className="mt-6 flex gap-3">
-            <button onClick={() => setConfirmId(null)} className="flex-1 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-navy">Cancel</button>
-            <button onClick={() => { remove('events', confirmId); setConfirmId(null) }} className="flex-1 rounded-full bg-red-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600">Delete</button>
+            <button onClick={() => setConfirmId(null)} className="flex-1 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-navy" data-write>Cancel</button>
+            <button onClick={() => { remove('events', confirmId); setConfirmId(null) }} className="flex-1 rounded-full bg-red-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-600" data-write>Delete</button>
           </div>
         </Modal>
       )}

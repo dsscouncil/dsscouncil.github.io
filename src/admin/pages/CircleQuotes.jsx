@@ -12,7 +12,7 @@ const RING_COLORS = {
 }
 
 function QuoteCard({ cq }) {
-  const { update } = useAdmin()
+  const { update, canEdit } = useAdmin()
   const [label, setLabel] = useState(cq.label)
   const [quote, setQuote] = useState(cq.quote)
   const [saved, setSaved] = useState(false)
@@ -32,13 +32,13 @@ function QuoteCard({ cq }) {
       </div>
       <div className="mt-5 space-y-4">
         <Field label="Circle Label">
-          <input className={inputCls} value={label} onChange={(e) => { setLabel(e.target.value); setSaved(false) }} />
+          <input disabled={!canEdit} className={inputCls} value={label} onChange={(e) => { setLabel(e.target.value); setSaved(false) }} />
         </Field>
         <Field label="Hover Quote">
-          <textarea rows={3} className={inputCls} value={quote} onChange={(e) => { setQuote(e.target.value); setSaved(false) }} />
+          <textarea disabled={!canEdit} rows={3} className={inputCls} value={quote} onChange={(e) => { setQuote(e.target.value); setSaved(false) }} />
         </Field>
         <button onClick={save} disabled={!dirty || !label.trim() || !quote.trim()}
-          className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors disabled:opacity-40">
+          className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-2.5 text-sm font-semibold text-white hover:bg-navy-deep transition-colors disabled:opacity-40" data-write>
           {saved ? <Check className="h-4 w-4 text-gold" /> : <Save className="h-4 w-4" />}
           {saved ? 'Saved' : 'Save'}
         </button>
