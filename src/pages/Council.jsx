@@ -3,6 +3,52 @@ import PageHero from '../components/PageHero.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { useAdmin, MEMBER_CATEGORIES } from '../admin/store.jsx'
 
+// Heads and their coordinators belong together on the grid. Role titles are free
+// text, so the pair is derived from the title: "Head of IT" and "IT Coordinator"
+// both reduce to "it". The coordinator match is deliberately loose because the
+// live data contains a misspelling ("Coordiantor"); anything with no partner is
+// left exactly where it was.
+function departmentKey(role) {
+  const r = (role || '').toLowerCase().replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim()
+  const head = r.match(/^head of (.+)$/)
+  if (head) return head[1]
+  const coord = r.match(/^(.+?)\s+co[a-z]*tor$/)
+  return coord ? coord[1] : null
+}
+
+function isHead(role) {
+  return /^head of /i.test(role || '')
+}
+
+// Keeps the original ordering untouched, except that the first tile of each
+// department is immediately followed by that department's other members,
+// head first. Departments stay in the order they already appeared in.
+function pairDepartments(list) {
+  const base = list
+  const buckets = new Map()
+  for (const m of base) {
+    const key = departmentKey(m.role)
+    if (!key) continue
+    const b = buckets.get(key) || { heads: [], others: [] }
+    ;(isHead(m.role) ? b.heads : b.others).push(m)
+    buckets.set(key, b)
+  }
+  const placed = new Set()
+  const out = []
+  for (const m of base) {
+    const key = departmentKey(m.role)
+    if (!key) {
+      out.push(m)
+      continue
+    }
+    if (placed.has(key)) continue
+    placed.add(key)
+    const b = buckets.get(key)
+    out.push(...b.heads, ...b.others)
+  }
+  return out
+}
+
 function MemberCard({ m }) {
   return (
     <div className="group h-full rounded-2xl bg-card border border-border gold-block">
@@ -55,7 +101,7 @@ export default function Council() {
     const order = (m) => (m.order ?? Number.MAX_SAFE_INTEGER)
     return Object.entries(byCat).map(([cat, list]) => [
       cat,
-      [...list].sort((a, b) => (a.tier ?? b.tier ?? 0) - (b.tier ?? a.tier ?? 0) || order(a) - order(b)),
+      pairDepartments([...list].sort((a, b) => (a.tier ?? b.tier ?? 0) - (b.tier ?? a.tier ?? 0) || order(a) - order(b))),
     ])
   }, [data.members, filter])
 
