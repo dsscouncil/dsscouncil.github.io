@@ -8,7 +8,7 @@
 //
 //   bun run check:meta
 
-import { readFileSync } from 'node:fs'
+import { readFileSync, statSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
@@ -56,10 +56,26 @@ if (length > MAX_DESCRIPTION) {
 }
 if (!expected) errors.push('  description is empty')
 
+// The share card is what WhatsApp, LinkedIn and X render. A dangling og:image
+// is invisible in review and obvious in a link preview, so assert the file is
+// actually in the build output's public folder and that both cards agree.
+const ogImage = attr(/<meta property="og:image" content="([^"]*)"/)
+const twitterImage = attr(/<meta name="twitter:image" content="([^"]*)"/)
+if (ogImage !== twitterImage) {
+  errors.push(`  twitter:image is "${twitterImage}", expected "${ogImage}"`)
+}
+const imagePath = new URL(ogImage).pathname.replace(/^\//, '')
+try {
+  const bytes = statSync(join(root, 'public', imagePath)).size
+  if (bytes < 5_000) errors.push(`  og:image ${imagePath} is only ${bytes} bytes - looks like a placeholder`)
+} catch {
+  errors.push(`  og:image ${imagePath} does not exist in public/`)
+}
+
 if (errors.length) {
   console.error('meta check failed:\n' + errors.join('\n'))
   process.exit(1)
 }
 
-console.log(`meta check ok - ${length}/${MAX_DESCRIPTION} chars, identical in ${Object.keys(fields).length} places:`)
+console.log(`meta check ok - ${length}/${MAX_DESCRIPTION} chars, identical in ${Object.keys(fields).length} places, og:image present:`)
 console.log(`  "${expected}"`)
