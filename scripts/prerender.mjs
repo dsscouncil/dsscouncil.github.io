@@ -17,7 +17,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ROUTES, servedPath } from '../src/site.js'
+import { ROUTES, servedPath, BY_PATH } from '../src/site.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
@@ -35,8 +35,68 @@ const escapeAttr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').repla
 // the visible, hydrated navigation.
 const CRAWL_NAV =
   '<nav class="sr-only" aria-label="Site sections"><ul>' +
-  ROUTES.map((r) => `<li><a href="${escapeAttr(servedPath(r.path))}">${escapeAttr(r.nav)}</a></li>`).join('') +
+  ROUTES.map((r) => `<li><a href="${escapeAttr(servedPath(r.path))}">${escapeAttr(r.label)}</a></li>`).join('') +
   '</ul></nav>'
+
+/** Contextual links in addition to the flat nav. A nav alone gives Google ten
+ *  identical link sets; page-specific links give it varied anchor text and a
+ *  link graph that looks like a real site rather than a template. */
+const relatedNav = (route) => {
+  const links = (route.related || []).map((p) => BY_PATH.get(p)).filter(Boolean)
+  if (!links.length) return ''
+  return (
+    '<nav class="sr-only" aria-label="Related pages"><ul>' +
+    links
+      .map(
+        (t) =>
+          `<li><a href="${escapeAttr(servedPath(t.path))}" title="${escapeAttr(t.title)}">${escapeAttr(t.label)}</a></li>`,
+      )
+      .join('') +
+    '</ul></nav>'
+  )
+}
+
+const LD_RE = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
+
+/** Per-route structured data: tells Google what this specific URL is, how it
+ *  relates to the site, and where it sits in the hierarchy. Without it every
+ *  URL carries identical schema, which gives a crawler nothing to tell apart. */
+function enrichJsonLd(html, route, url) {
+  const match = html.match(LD_RE)
+  if (!match) {
+    console.error('prerender: no JSON-LD block found in the built HTML')
+    process.exit(1)
+  }
+  const doc = JSON.parse(match[1])
+  const graph = doc['@graph'].filter(
+    (n) => !(n['@type'] === 'WebPage' && n.url === url) && !(n['@type'] === 'BreadcrumbList' && n['@id'] === `${url}#breadcrumb`),
+  )
+  const name = route.title.split(' | ')[0]
+  graph.push({
+    '@type': 'WebPage',
+    '@id': `${url}#webpage`,
+    url,
+    name: route.title,
+    isPartOf: { '@id': `${ORIGIN}/#website` },
+    about: { '@id': `${ORIGIN}/#organization` },
+    inLanguage: 'en-AE',
+    breadcrumb: { '@id': `${url}#breadcrumb` },
+  })
+  graph.push({
+    '@type': 'BreadcrumbList',
+    '@id': `${url}#breadcrumb`,
+    itemListElement:
+      route.path === '/'
+        ? [{ '@type': 'ListItem', position: 1, name, item: url }]
+        : [
+            { '@type': 'ListItem', position: 1, name: 'DS Pulse', item: `${ORIGIN}/` },
+            { '@type': 'ListItem', position: 2, name, item: url },
+          ],
+  })
+  doc['@graph'] = graph
+  const block = `<script type="application/ld+json">\n${JSON.stringify(doc, null, 2)}\n    </script>`
+  return html.replace(LD_RE, () => block)
+}
 
 const shellPath = join(dist, 'index.html')
 if (!existsSync(shellPath)) {
@@ -112,12 +172,27 @@ for (const route of ROUTES) {
 
   // Every page must expose every section as a real link, or sitelinks have
   // nothing to be built from.
-  html = swapOnce(html, /<\/body>/, `${CRAWL_NAV}\n</body>`, 'closing </body>')
+  html = swapOnce(html, /<\/body>/, `${CRAWL_NAV}${relatedNav(route)}\n</body>`, 'closing </body>')
   for (const target of ROUTES) {
     if (!html.includes(`href="${escapeAttr(servedPath(target.path))}"`)) {
       console.error(`prerender: ${route.path} does not link to ${target.path}`)
       process.exit(1)
     }
+  }
+  for (const p of route.related || []) {
+    if (!html.includes(`>${escapeAttr(BY_PATH.get(p).label)}</a>`)) {
+      console.error(`prerender: ${route.path} is missing its contextual link to ${p}`)
+      process.exit(1)
+    }
+  }
+
+  html = enrichJsonLd(html, route, url)
+  // The rewritten schema must still be valid JSON and describe this URL.
+  const ld = JSON.parse(html.match(LD_RE)[1])
+  const page = ld['@graph'].find((n) => n['@type'] === 'WebPage' && n.url === url)
+  if (!page || !ld['@graph'].some((n) => n['@type'] === 'WebSite')) {
+    console.error(`prerender: ${route.path} lost its WebSite or WebPage entity`)
+    process.exit(1)
   }
 
   const outDir = route.path === '/' ? dist : join(dist, route.path)
@@ -150,4 +225,4 @@ ${urls}
 `,
 )
 
-console.log(`prerender ok - ${written.length} routes, one description, sitemap regenerated (${today})`)
+console.log(`prerender ok - ${written.length} routes, one description, nav + contextual links + WebPage schema, sitemap regenerated (${today})`)
