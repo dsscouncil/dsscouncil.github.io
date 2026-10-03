@@ -64,24 +64,25 @@ function keywords(route) {
   return `<meta name="keywords" content="${route.label}, ${ROUTES.map((r) => r.label).join(', ')}, Dubai Scholars, Secondary Student Council, DS Pulse" />`
 }
 
-/** The full <head> block a route sells: normal meta, then the explicit
- *  sitelinks signals Google applies to the result block. */
+/** The explicit sitelinks signals for one route's <head>. These are the only
+ *  things that Google reads to build the indented sub-links, so they must be
+ *  exact, unique, and identical in wording to the titles the platform uses.
+ *
+ *  The section title is deliberately the FIRST token of each page's <title>,
+ *  so every <link rel="sitelinks"> and the per-route <meta name="sitelinks:title">
+ *  agree on the wording Google shows. */
 function sitelinksHeadHtml(route) {
   const title = route.title.split(' | ')[0]
   const subtitle = SECTION_SUBTITLES[route.path] || ''
   const sub = subtitle ? `<meta name="sitelinks:description" content="${escapeAttr(subtitle)}" />` : ''
-  return `
-    <!-- Explicit sitelinks for this result. The <link title> is the section
-         name Google shows as a bold sub-link, the href the URL, and the
-         keywords/meta line the sentence under it. -->
-    ${sectionLinks(route)}
-    <meta name="sitelinks:title" content="${escapeAttr(title)}" />
-    ${sub}
-    <link rel="sitelinks:page" href="${escapeAttr(servedPath(route.path))}" title="${escapeAttr(route.title)}" />
-  `.trim()
+  return (
+    `<link rel="sitelinks" title="${escapeAttr(title)}" href="${escapeAttr(servedPath(route.path))}" />` + '\n' +
+    sub + '\n' +
+    `<meta name="sitelinks:title" content="${escapeAttr(title)}" />` + '\n' +
+    `<link rel="sitelinks:page" href="${escapeAttr(servedPath(route.path))}" title="${escapeAttr(route.title)}" />`  ).trim()
 }
 
-const LD_RE = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
+ const LD_RE = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
 
 const shellPath = join(dist, 'index.html')
 if (!existsSync(shellPath)) {
