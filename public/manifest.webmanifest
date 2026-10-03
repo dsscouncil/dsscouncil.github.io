@@ -1,0 +1,13 @@
+{
+  "name": "Dubai Scholars Secondary Student Council",
+  "short_name": "DS Pulse",
+  "description": "The official Secondary Student Council of Dubai Scholars Private School. Proactive Union for Leadership & Student Empowerment. We Don't Just Represent. We Deliver.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b1622",
+  "theme_color": "#0b1622",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
