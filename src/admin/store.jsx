@@ -9,7 +9,7 @@ import {
 export const VOICE_STATUSES = ['Received', 'Under Review', 'In Progress', 'Completed', 'Unable to Proceed']
 export const MEMBER_CATEGORIES = ['Core Team', 'House Leadership', 'Well-being Leadership', 'Departmental Leadership', 'Sports Council']
 export const YEAR_GROUPS = ['Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11']
-export const VOICE_CATEGORIES = ['Academic', 'Facilities', 'Events', 'Clubs', 'Wellbeing', 'Sustainability', 'Student Life', 'Other']
+export const VOICE_CATEGORIES = ['Academic', 'Facilities', 'Events', 'Clubs', 'Wellbeing', 'Sustainability', 'Student Life', 'Report', 'Other']
 export const VOICE_PRIORITIES = ['Low', 'Medium', 'High', 'Urgent']
 
 const AdminContext = createContext(null)
