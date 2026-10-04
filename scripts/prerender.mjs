@@ -34,55 +34,7 @@ const NAV_NAV =
   ROUTES.map((r) => `<li><a href="${escapeAttr(servedPath(r.path))}">${escapeAttr(r.label)}</a></li>`).join('') +
   '</ul></nav>'
 
-/** The exact wording of a sibling section, the same wording used in its <title>
- *  and in the <link title> below. Match the reference layout (e.g.
- *  "Secondary Stage" / "Highlights of the Phase ...") - short title, descriptive
- *  subtitle, one per section. */
-const SECTION_SUBTITLES = {
-  '/council': 'Meet the council that runs Dubai Scholars Secondary, with its members and its work.',
-  '/clubs': 'Extracurricular activities and societies students can join, along with how to sign up.',
-  '/events': 'Upcoming assemblies, exhibitions and student-led events, and a record of past ones.',
-  '/news': 'Announcements and write-ups from the Council, straight from the students running it.',
-  '/initiatives': 'The campaigns and projects the Council has committed to, with who leads each one.',
-  '/about': 'What DS Pulse is, how the Council is elected, and what it has promised the school.',
-  '/documents': 'The Constitution, policies and meeting minutes published by the Council.',
-  '/student-voice': 'Share an idea, raise a concern, or see what other students have already put forward.',
-  '/contact': 'Email the Council, find who to ask about what, or send a message.',
-}
-
-/** One `<link rel="sitelinks" title="..." href="...">` per sibling section. */
-function sectionLinks(route) {
-  return ROUTES.map((r) =>
-    `<link rel="sitelinks" title="${escapeAttr(r.label)}" href="${escapeAttr(servedPath(r.path))}" />`,
-  ).join('\n    ')
-}
-
-
-
-/** Per-page meta keyword line: the section titles as a keywords token list. */
-function keywords(route) {
-  return `<meta name="keywords" content="${route.label}, ${ROUTES.map((r) => r.label).join(', ')}, Dubai Scholars, Secondary Student Council, DS Pulse" />`
-}
-
-/** The explicit sitelinks signals for one route's <head>. These are the only
- *  things that Google reads to build the indented sub-links, so they must be
- *  exact, unique, and identical in wording to the titles the platform uses.
- *
- *  The section title is deliberately the FIRST token of each page's <title>,
- *  so every <link rel="sitelinks"> and the per-route <meta name="sitelinks:title">
- *  agree on the wording Google shows. */
-function sitelinksHeadHtml(route) {
-  const title = route.title.split(' | ')[0]
-  const subtitle = SECTION_SUBTITLES[route.path] || ''
-  const sub = subtitle ? `<meta name="sitelinks:description" content="${escapeAttr(subtitle)}" />` : ''
-  return (
-    `<link rel="sitelinks" title="${escapeAttr(title)}" href="${escapeAttr(servedPath(route.path))}" />` + '\n' +
-    sub + '\n' +
-    `<meta name="sitelinks:title" content="${escapeAttr(title)}" />` + '\n' +
-    `<link rel="sitelinks:page" href="${escapeAttr(servedPath(route.path))}" title="${escapeAttr(route.title)}" />`  ).trim()
-}
-
- const LD_RE = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
+const LD_RE = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
 
 const shellPath = join(dist, 'index.html')
 if (!existsSync(shellPath)) {
@@ -158,7 +110,6 @@ for (const route of ROUTES) {
 
   // Every page must expose every section as a real link, or sitelinks have
   // nothing to be built from.
-  html = swapOnce(html, /<\/head>/, `${sitelinksHeadHtml(route)}</head>`, 'closing </head>')
   html = swapOnce(html, /<\/body>/, `${NAV_NAV}\n</body>`, 'closing </body>')
   for (const target of ROUTES) {
     if (!html.includes(`href="${escapeAttr(servedPath(target.path))}"`)) {
@@ -227,7 +178,7 @@ ${urls}
 `,
 )
 
-console.log(`prerender ok - ${written.length} routes, one description, explicit sitelinks in <head> + sr-only nav, sitemap regenerated (${today})`)
+console.log(`prerender ok - ${written.length} routes, one description, sr-only nav, sitemap regenerated (${today})`)
 
 /** Enrich the JSON-LD with a page-level WebPage + BreadcrumbList, so every
  *  URL carries its own identity alongside the site-level WebSite. Without it
