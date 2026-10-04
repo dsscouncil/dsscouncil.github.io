@@ -11,7 +11,11 @@
          is what makes the same link look like a different page everywhere.
          `npm run check:meta` fails if the four ever drift apart again. -->
     <title>DS Secondary Student Council | DS Pulse</title>
-    <link rel="icon" type="image/png" href="/favicon-v2.png" />
+    <!-- Search-result icon: Google picks the largest square <link rel="icon">,
+         so the big PNGs carry the zoomed-out mark. Browsers pick the best size
+         for a 16px tab and take the .ico (tight mark) instead. -->
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <!-- Conventional paths too: crawlers, preview generators and older tools
          request /favicon.ico or /apple-touch-icon.png by convention rather
          than parsing the tags above. -->
