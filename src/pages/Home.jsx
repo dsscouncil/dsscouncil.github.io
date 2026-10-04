@@ -46,7 +46,7 @@ export default function Home() {
           <Reveal delay={150}>
             <div className="relative">
               <div className="relative rounded-3xl overflow-hidden gold-outline">
-                <span className="inline-block relative w-full aspect-[3/2]">
+                <span className="block relative w-full aspect-[3/2]">
                   <img
                     src={IMG.hero}
                     srcSet={IMG.heroSrcSet}
