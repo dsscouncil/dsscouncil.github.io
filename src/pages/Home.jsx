@@ -66,12 +66,11 @@ export default function Home() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-display text-4xl font-bold text-gold">{activeInitiatives}</div>
-                    <div className="text-xs text-white/70">Active Initiatives</div>
+                    <div className="mt-1.5 text-sm text-white/70">Active Initiatives</div>
                   </div>
-                  <div className="h-px w-8 bg-white/20" />
                   <div>
                     <div className="font-display text-4xl font-bold text-white">{data.members.length}</div>
-                    <div className="text-xs text-white/70">Council Members</div>
+                    <div className="mt-1.5 text-sm text-white/70">Council Members</div>
                   </div>
                 </div>
               </div>
