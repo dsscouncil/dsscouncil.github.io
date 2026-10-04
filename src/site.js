@@ -25,7 +25,7 @@ export const ROUTES = [
     label: 'DS Pulse',
     navLabel: 'Home',
     nav: true,
-    title: 'DS Secondary Student Council | DS Pulse',
+    title: 'DS PULSE | Dubai Scholars',
     blurb: 'The official student leadership platform for Dubai Scholars Secondary — what the Council is working on right now.',
     priority: '1.0',
     changefreq: 'daily',
