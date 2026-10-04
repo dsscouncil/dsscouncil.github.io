@@ -23,7 +23,7 @@ export default function Home() {
     <>
       {/* Hero */}
       <section className="bg-navy-deep pt-32 pb-20 md:pt-40 md:pb-28">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8 grid lg:grid-cols-[1fr_1.3fr] gap-12 items-center">
           <Reveal>
             <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-6">{sc.heroEyebrow}</div>
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.06] text-white">
@@ -50,7 +50,7 @@ export default function Home() {
                   <img
                     src={IMG.hero}
                     srcSet={IMG.heroSrcSet}
-                    sizes="(min-width: 1024px) 584px, 100vw"
+                    sizes="(min-width: 1024px) 660px, 100vw"
                     width={1500}
                     height={1000}
                     alt="Dubai Scholars student leaders"
@@ -61,16 +61,16 @@ export default function Home() {
                   />
                 </span>
               </div>
-              <div className="absolute -bottom-6 -left-6 md:-left-10 glass-dark rounded-2xl p-5 shadow-lg w-56">
+              <div className="absolute -bottom-6 -left-6 md:-left-10 glass-dark rounded-2xl p-6 shadow-lg w-72">
                 <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">Live Council</div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-display text-3xl font-bold text-gold">{activeInitiatives}</div>
+                    <div className="font-display text-4xl font-bold text-gold">{activeInitiatives}</div>
                     <div className="text-xs text-white/70">Active Initiatives</div>
                   </div>
                   <div className="h-px w-8 bg-white/20" />
                   <div>
-                    <div className="font-display text-3xl font-bold text-white">{data.members.length}</div>
+                    <div className="font-display text-4xl font-bold text-white">{data.members.length}</div>
                     <div className="text-xs text-white/70">Council Members</div>
                   </div>
                 </div>
