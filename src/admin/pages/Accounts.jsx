@@ -27,6 +27,9 @@ export default function Accounts() {
   const [busy, setBusy] = useState(false)
   const [problem, setProblem] = useState('')
 
+  // Frozen accounts: cannot be modified from this console, ever.
+  const isLocked = (a) => ['Mr. Huzefa Attaree', 'Burhanuddin Khanbhaiwala'].includes(a.display_name)
+
   // The nav hides this entry for non-Super accounts; this covers a typed URL.
   // It has to come after every hook, so all the state above is declared first.
   if (!isSuper) return <Navigate to="/admin" replace />
@@ -61,6 +64,9 @@ export default function Accounts() {
           <p className="mt-1 text-sm text-muted-foreground">
             Issue new logins or change what existing ones can do. Super accounts can edit the site and manage every other account.
           </p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Mr. Huzefa Attaree and Burhanuddin Khanbhaiwala are locked from changes at the server level. Their role, password, name and access cannot be modified from this console.
+          </p>
         </div>
         <button
           onClick={() => { setProblem(''); setIssuing({ ...EMPTY }) }}
@@ -78,8 +84,10 @@ export default function Accounts() {
       <div className="mt-7 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {accounts.map((a) => {
           const isMe = a.username === session?.username
+          const locked = isLocked(a)
           return (
-            <div key={a.username} className="rounded-3xl border border-border bg-white p-6">
+            <div key={a.username} className={"rounded-3xl border p-6" + (locked ? ' border-gold/40 bg-gold/5' : ' border-border bg-white')}
+              data-locked={locked}>
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <h3 className="truncate font-display text-lg font-bold text-navy">{a.display_name}</h3>
@@ -88,6 +96,11 @@ export default function Accounts() {
                 <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${ROLE_STYLES[a.role]}`}>
                   {a.role}
                 </span>
+                {locked && (
+                  <span className="shrink-0 rounded-full bg-gold/15 px-3 py-1 text-xs font-bold uppercase tracking-wide text-gold-ink border border-gold/40">
+                    Locked
+                  </span>
+                )}
               </div>
 
               <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
@@ -98,13 +111,12 @@ export default function Accounts() {
                 <label className="block">
                   <span className="text-xs font-semibold uppercase tracking-wide text-navy/70">Role</span>
                   <select
-                    className={`${inputCls} mt-1.5`}
+                    className={`${inputCls} mt-1.5 ${locked ? 'opacity-50 cursor-not-allowed' : ''}`}
                     value={a.role}
-                    disabled={isMe || busy}
-                    onChange={(e) => run(
-                      () => manageAccount('set_role', a.username, { role: e.target.value }),
-                      () => {},
-                    )}
+                    disabled={locked || isMe || busy}
+                    onChange={(e) => {
+                      if (!locked) run(() => manageAccount('set_role', a.username, { role: e.target.value }), () => {});
+                    }}
                   >
                     {ROLES.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
                   </select>
@@ -115,26 +127,29 @@ export default function Accounts() {
 
                 <div className="flex flex-wrap gap-2">
                   <button
-                    onClick={() => { setProblem(''); setResetting({ username: a.username, display_name: a.display_name, password: '' }) }}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-xs font-semibold text-navy hover:bg-border transition-colors"
+                    onClick={() => { if (!locked) { setProblem(''); setResetting({ username: a.username, display_name: a.display_name, password: '' }) } }}
+                    className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${locked ? 'bg-surface text-muted-foreground cursor-not-allowed' : 'bg-surface text-navy hover:bg-border'}`}
                     data-write
+                    aria-disabled={locked}
                   >
                     <KeyRound className="h-3.5 w-3.5" /> Password
                   </button>
                   <button
-                    onClick={() => { setProblem(''); setRenaming({ username: a.username, displayName: a.display_name }) }}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-xs font-semibold text-navy hover:bg-border transition-colors"
+                    onClick={() => { if (!locked) { setProblem(''); setRenaming({ username: a.username, displayName: a.display_name }) } }}
+                    className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${locked ? 'bg-surface text-muted-foreground cursor-not-allowed' : 'bg-surface text-navy hover:bg-border'}`}
                     data-write
+                    aria-disabled={locked}
                   >
                     <Pencil className="h-3.5 w-3.5" /> Rename
                   </button>
-                  {!isMe && (
+                  {!isMe && !locked && (
                     <button
-                      onClick={() => { setProblem(''); setRemoving(a) }}
-                      className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-red-50 px-4 py-2 text-xs font-semibold text-red-500 hover:bg-red-100 transition-colors"
+                      onClick={() => { if (!locked) { setProblem(''); setRemoving(a) } }}
+                      className={`ml-auto inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${locked ? 'bg-red-50 text-muted-foreground cursor-not-allowed' : 'bg-red-50 text-red-500 hover:bg-red-100'}`}
                       data-write
+                      aria-disabled={locked}
                     >
-                      <Trash2 className="h-3.5 w-3.5" /> Remove
+                      <Trash2 className="h-3.5 w-3.5" /> {locked ? 'Locked' : 'Remove'}
                     </button>
                   )}
                 </div>

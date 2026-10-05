@@ -62,6 +62,13 @@ export function AdminProvider({ children }) {
 
   const canEdit = session?.role !== 'viewer'
   // Only Super accounts may issue or change other admin accounts.
+  // Accounts that cannot be edited from this console, no matter the role
+  // or the action. Locked by display name so they survive role changes.
+  const LOCKED_ACCOUNTS = ['Mr. Huzefa Attaree', 'Burhanuddin Khanbhaiwala']
+
+  const isAccountLocked = (username, displayName) =>
+    LOCKED_ACCOUNTS.some((name) => name === displayName || name === username)
+
   const isSuper = session?.role === 'super'
   const [accounts, setAccounts] = useState([])
 
@@ -144,6 +151,11 @@ export function AdminProvider({ children }) {
       // ── accounts (server-side, gated by session) ──
       manageAccount: async (action, username, opts) => {
         if (session?.role !== 'super') throw new Error('Only Super accounts can manage admin accounts')
+        if (isAccountLocked(username, session?.displayName)) {
+          throw new Error(
+            `This account is locked from changes. Your console cannot modify it.`,
+          )
+        }
         const result = await adminManageAccount(session.token, action, username, opts)
         await loadAccounts()
         return result
