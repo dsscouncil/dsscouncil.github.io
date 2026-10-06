@@ -133,13 +133,11 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-5 lg:px-8 grid lg:grid-cols-2 gap-14 items-center">
           <Reveal>
             <div className="rounded-3xl overflow-hidden gold-outline">
-              <span className="relative w-full aspect-[769/2678] block">
+              <span className="relative w-full aspect-[1600/1017] block">
                 <img
                   src={IMG.heroAlt}
-                  srcSet={IMG.heroAltSrcSet}
-                  sizes="(min-width: 1024px) 580px, 100vw"
-                  width={769}
-                  height={2678}
+                  width={1600}
+                  height={1017}
                   loading="lazy"
                   decoding="async"
                   alt="Dubai Scholars Secondary Student Council members on the stairs"
