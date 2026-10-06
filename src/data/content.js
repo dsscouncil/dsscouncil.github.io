@@ -1,5 +1,5 @@
 import logoUrl from '../assets/logo.png'
-import { ROUTES } from '../site.js'
+import { ROUTES, BY_PATH } from '../site.js'
 
 export const LOGO = logoUrl
 
@@ -33,7 +33,16 @@ export const IMG = {
 // footer uses each section's full label - the exact words that page uses as its
 // title - because that is the wording Google is most likely to reuse when it
 // shows a sitelink.
-export const navLinks = ROUTES.filter((r) => r.nav).map((r) => ({ label: r.navLabel, href: r.path }))
+//
+// The tab ORDER of the header bar is its own list, not the route-table order,
+// because that order is also the footer's and the sitemap's. Paths are looked
+// up through BY_PATH, so a header label still can never drift from the page's
+// <title>, and a removed route simply drops out instead of rendering blank.
+const HEADER_ORDER = ['/', '/about', '/council', '/initiatives', '/events', '/student-voice', '/clubs', '/contact']
+
+export const navLinks = HEADER_ORDER.map((path) => BY_PATH.get(path))
+  .filter(Boolean)
+  .map((r) => ({ label: r.navLabel, href: r.path }))
 
 export const footerLinks = ROUTES.map((r) => ({ label: r.label, href: r.path }))
 
