@@ -97,16 +97,14 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-5 lg:px-8 grid lg:grid-cols-2 gap-14 items-center">
           <Reveal>
             <div className="rounded-3xl overflow-hidden gold-outline">
-              <span className="relative w-full aspect-[7/5] block">
+              <span className="relative w-full aspect-[1600/1017] block">
                 <img
                   src={IMG.about}
-                  srcSet={IMG.aboutSrcSet}
-                  sizes="(min-width: 1024px) 580px, 100vw"
-                  width={1260}
-                  height={900}
+                  width={1600}
+                  height={1017}
                   loading="lazy"
                   decoding="async"
-                  alt="Students collaborating"
+                  alt="Dubai Scholars Secondary Student Council members on the stairs"
                   referrerPolicy="no-referrer"
                   className="w-full h-full inset-0 absolute object-contain"
                 />
@@ -122,39 +120,6 @@ export default function Home() {
             </div>
             <Link to="/about" className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-navy hover:text-gold transition-colors group">
               Learn more about the Council
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Council group photo */}
-      <section className="py-20 md:py-28 bg-white">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8 grid lg:grid-cols-2 gap-14 items-center">
-          <Reveal>
-            <div className="rounded-3xl overflow-hidden gold-outline">
-              <span className="relative w-full aspect-[1600/1017] block">
-                <img
-                  src={IMG.heroAlt}
-                  width={1600}
-                  height={1017}
-                  loading="lazy"
-                  decoding="async"
-                  alt="Dubai Scholars Secondary Student Council members on the stairs"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full inset-0 absolute object-contain"
-                />
-              </span>
-            </div>
-          </Reveal>
-          <Reveal delay={120}>
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-ink mb-3">Our Council</div>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-navy leading-tight">Student leaders across Years 9–11</h2>
-            <p className="mt-5 text-muted-foreground leading-relaxed">
-              From the day-to-day work of each house to the projects shaping life on campus, the people below are the ones carrying it forward.
-            </p>
-            <Link to="/council" className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-navy hover:text-gold transition-colors group">
-              Meet the Council
               <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </Reveal>

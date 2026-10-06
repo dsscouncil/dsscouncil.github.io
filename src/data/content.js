@@ -19,14 +19,10 @@ export const IMG = {
   heroSrcSet: [src('b297102f1_skl.jpg', 800, 533), src('b297102f1_skl.jpg', 1200, 800), src('b297102f1_skl.jpg', 1500, 1000, 90)]
     .map((u, i) => `${u} ${[800, 1200, 1500][i]}w`)
     .join(', '),
-  about: src('afb4cd38f_DS-small.jpg', 1260, 900, 90),
-  aboutSrcSet: [src('afb4cd38f_DS-small.jpg', 600, 429), src('afb4cd38f_DS-small.jpg', 900, 643), src('afb4cd38f_DS-small.jpg', 1260, 900, 90)]
-    .map((u, i) => `${u} ${[600, 900, 1260][i]}w`)
-    .join(', '),
-  // Council group photo. A local file (public/hero-alt.jpg) so it can be swapped
-  // by replacing that one file — no srcSet, because a static file cannot be
-  // resized on demand and the ?w=&h= params only worked on the base44 CDN.
-  heroAlt: '/hero-alt.jpg',
+  // Council group photo. A local file (public/council-photo.jpg) so it can be
+  // swapped by replacing that one file — no srcSet, because a static file
+  // cannot be resized on demand.
+  about: '/council-photo.jpg',
 }
 
 // Both lists come from the route table in site.js rather than being written out
