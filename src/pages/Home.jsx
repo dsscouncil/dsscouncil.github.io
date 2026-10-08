@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, MessageCircle, ExternalLink } from 'lucide-react'
 import Reveal from '../components/Reveal.jsx'
 import PulseMark from '../components/PulseMark.jsx'
+import CountUp from '../components/CountUp.jsx'
 import SeeAlso from '../components/SeeAlso.jsx'
 import { IMG, LOGO } from '../data/content.js'
 import { useAdmin } from '../admin/store.jsx'
@@ -79,15 +80,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats band */}
+      {/* Stats band — same hero typography and number animation as the hero card. */}
       <section className="bg-navy py-16 md:py-20">
         <div className="mx-auto max-w-7xl grid grid-cols-2 lg:grid-cols-4 gap-10 px-7 lg:px-10">
           {sc.stats.map((s) => (
-            <div key={s.label} className="text-center">
-              <div className="font-display text-5xl md:text-6xl font-bold text-gold tabular-nums">{statValue(s.label)}</div>
-              <div className="mt-3 text-lg font-semibold text-white">{s.label}</div>
-              <div className="text-sm text-white/60 mt-1">{s.sub}</div>
-            </div>
+            <Reveal key={s.label}>
+              <div className="text-center">
+                <div className="font-display text-5xl md:text-6xl font-bold text-gold tabular-nums"><CountUp value={statValue(s.label)} duration={1600} /></div>
+                <div className="mt-3 text-lg font-semibold text-white">{s.label}</div>
+                <div className="text-sm text-white/60 mt-1">{s.sub}</div>
+              </div>
+            </Reveal>
           ))}
         </div>
       </section>

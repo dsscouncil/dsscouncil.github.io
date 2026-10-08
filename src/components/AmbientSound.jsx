@@ -4,18 +4,31 @@ import { Volume2, VolumeX } from 'lucide-react'
 const STORAGE_KEY = 'dss-ambient-sound'
 
 /**
- * Floating background-music control. Browsers only allow audio to start
- * after the visitor's first interaction, so playback kicks in on the first
- * click/keypress unless the visitor muted it previously (remembered in
- * localStorage). The 48s loop is seamless and stays quiet by design.
+ * Floating background-music control. Music is ON by default and playback is
+ * attempted the moment the page loads, with no input from the visitor.
+ * Pressing the button mutes it for good (the choice is remembered in
+ * localStorage) and nothing is ever played while muted.
+ *
+ * Audible autoplay is not guaranteed: browsers only allow it once they trust
+ * the site (Chrome's media-engagement rule, Safari on iOS needs a real
+ * gesture). A refused play() is therefore normal, not an error - playback then
+ * starts on the visitor's first click or keypress, which the listeners below
+ * pick up.
  */
 export default function AmbientSound() {
   const audioRef = useRef(null)
+  // Audio is muted by default. It only plays after the visitor explicitly
+  // presses the button; there is no audible autoplay on a fresh visit.
+  // A past choice to leave the music on is remembered, so returning visitors
+  // keep the sound level they picked last time.
   const [muted, setMuted] = useState(() => {
     try {
-      return localStorage.getItem(STORAGE_KEY) === 'off'
+      const stored = localStorage.getItem(STORAGE_KEY)
+      // Only a stored 'on' value re-enables sound. Anything else — no stored
+      // value, or an explicit 'off' — starts muted.
+      return stored !== 'on'
     } catch {
-      return false
+      return true
     }
   })
 
@@ -25,10 +38,9 @@ export default function AmbientSound() {
     const el = new Audio('/audio/ambient-loop-v3.m4a')
     el.loop = true
     el.volume = 0.35
-    // 'none' keeps the 1.2 MB track off the critical path: the browser only
-    // fetches it once play() is called, which happens on the visitor's first
-    // interaction. With 'auto' Chrome downloaded the whole file on every page
-    // load even though playback was blocked until then.
+    // 'none' keeps the 1.2 MB track off the critical path: play() pulls it in
+    // the moment playback is allowed. With 'auto' Chrome downloaded the whole
+    // file on every page load, even on loads where playback was refused.
     el.preload = 'none'
     audioRef.current = el
     return () => {
@@ -46,21 +58,21 @@ export default function AmbientSound() {
     } catch {
       /* private mode — preference just won't persist */
     }
-    if (muted) {
-      el.pause()
-      return
-    }
-    // Called outside a gesture on load: rejected until first interaction,
-    // where the window listeners below retry it.
-    el.play().catch(() => {})
+    if (muted) el.pause()
   }, [muted])
 
   useEffect(() => {
     if (muted) return undefined
+    const el = audioRef.current
+    if (!el) return undefined
+
+    // Audio starts only after the visitor has explicitly unmuted.
+    // If the browser's autoplay policy still refuses the audible play(),
+    // the gesture listeners below take over on the next click or keypress.
     const kick = () => {
-      const el = audioRef.current
-      if (el) el.play().catch(() => {})
+      if (!muted) el.play().catch(() => {})
     }
+    kick()
     window.addEventListener('pointerdown', kick)
     window.addEventListener('keydown', kick)
     return () => {

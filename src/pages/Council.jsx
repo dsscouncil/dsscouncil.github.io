@@ -14,8 +14,8 @@ function departmentKey(role) {
   const r = (role || '').toLowerCase().replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim()
   const head = r.match(/^head of (.+)$/)
   if (head) return head[1]
-  const coord = r.match(/^(.+?)\s+co[a-z]*tor$/)
-  return coord ? coord[1] : null
+  const mate = r.match(/^(.+?)\s+(?:co[a-z]*tor|ambassador)$/)
+  return mate ? mate[1] : null
 }
 
 // Fallback team for roles that name no department: a deputy belongs beside the
@@ -45,12 +45,16 @@ function teamKey(cat, m) {
   return departmentKey(m.role) || deputyFamily(m.role)
 }
 
-// Captain / President / Head outrank Coordinator, and within any of those a
-// regular role outranks its Deputy.
+// Captain / President / Head outrank an Ambassador, which outranks a
+// Coordinator; within any of those a regular role outranks its Deputy.
+// An ambassador is a representative of the whole department while a
+// coordinator only runs one strand of it, so within a team an ambassador is
+// listed before the coordinators even when the coordinator's year comes first
+// in the year-order the list is built from.
 function seniority(role) {
   const r = (role || '').toLowerCase()
   const deputy = /^deputy/.test(r) ? 1 : 0
-  const leader = /(captain|president|head)/.test(r) ? 0 : 1
+  const leader = /(captain|president|head)/.test(r) ? 0 : /ambassador/.test(r) ? 1 : 2
   return leader * 2 + deputy
 }
 
@@ -130,11 +134,41 @@ export default function Council() {
     const filtered = filter === 'All' ? data.members : data.members.filter((m) => m.cat === filter)
     const byCat = {}
     for (const m of filtered) (byCat[m.cat] ||= []).push(m)
+
+    // Two orderings, chosen per category:
+    //   • Well-being Leadership is ordered by YEAR, because a Year 11 is more
+    //     senior than a Year 10 — it reads President (Y11), Head (Y10),
+    //     Ambassador (Y10), Coordinator (Y9). A year is never broken up there,
+    //     so nobody junior can be pulled above a senior year.
+    //   • Every other category keeps the department grouping: a head sits
+    //     directly beside their own coordinators, most senior role first. The
+    //     team grouping only ever tidies the order inside one category.
+    const YEAR_ORDER_CATEGORIES = new Set(['Well-being Leadership'])
+    const yearRank = (y) => {
+      const m = String(y || '').match(/year\s*(\d+)/i)
+      return m ? Number(m[1]) : 0
+    }
     const order = (m) => (m.order ?? Number.MAX_SAFE_INTEGER)
-    return Object.entries(byCat).map(([cat, list]) => [
-      cat,
-      groupTeams(cat, [...list].sort((a, b) => (a.tier ?? b.tier ?? 0) - (b.tier ?? a.tier ?? 0) || order(a) - order(b))),
-    ])
+    const tierThenOrder = (a, b) =>
+      (a.tier ?? b.tier ?? 0) - (b.tier ?? a.tier ?? 0) || order(a) - order(b)
+
+    return Object.entries(byCat).map(([cat, list]) => {
+      if (!YEAR_ORDER_CATEGORIES.has(cat)) {
+        return [cat, groupTeams(cat, [...list].sort(
+          (a, b) => yearRank(a.year) - yearRank(b.year) || tierThenOrder(a, b),
+        ))]
+      }
+      const sorted = [...list].sort(
+        (a, b) => yearRank(b.year) - yearRank(a.year) || tierThenOrder(a, b),
+      )
+      const years = []
+      for (const m of sorted) {
+        const rank = yearRank(m.year)
+        if (years.length && years[years.length - 1].rank === rank) years[years.length - 1].members.push(m)
+        else years.push({ rank, members: [m] })
+      }
+      return [cat, years.flatMap(({ members }) => groupTeams(cat, members))]
+    })
   }, [data.members, filter])
 
   return (
