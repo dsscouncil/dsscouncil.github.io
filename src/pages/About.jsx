@@ -41,7 +41,7 @@ const HOUSES = [
   {
     name: 'Integrity', house: 'Beta', img: houseBeta,
     colour: 'hsl(142 71% 38%)', ink: 'hsl(142 55% 33%)', soft: 'hsl(142 69% 94%)',
-    desc: 'Doing the right thing, especially when no one is watching.',
+    desc: 'A House is not built by its name, but by the character of those who carry it.',
   },
 ]
 
