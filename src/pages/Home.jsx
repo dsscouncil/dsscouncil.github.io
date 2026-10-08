@@ -66,11 +66,11 @@ export default function Home() {
                 <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">Live Council</div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-display text-4xl font-bold text-gold">{activeInitiatives}</div>
+                    <div className="font-display text-4xl font-bold text-gold tabular-nums"><CountUp value={activeInitiatives} /></div>
                     <div className="mt-1.5 text-sm text-white/70">Active Initiatives</div>
                   </div>
                   <div>
-                    <div className="font-display text-4xl font-bold text-white">{data.members.length}</div>
+                    <div className="font-display text-4xl font-bold text-white tabular-nums"><CountUp value={data.members.length} /></div>
                     <div className="mt-1.5 text-sm text-white/70">Council Members</div>
                   </div>
                 </div>
@@ -86,7 +86,7 @@ export default function Home() {
           {sc.stats.map((s) => (
             <Reveal key={s.label}>
               <div className="text-center">
-                <div className="font-display text-5xl md:text-6xl font-bold text-gold tabular-nums"><CountUp value={statValue(s.label)} duration={1600} /></div>
+                <div className="font-display text-5xl md:text-6xl font-bold text-gold tabular-nums"><CountUp value={statValue(s.label)} /></div>
                 <div className="mt-3 text-lg font-semibold text-white">{s.label}</div>
                 <div className="text-sm text-white/60 mt-1">{s.sub}</div>
               </div>
