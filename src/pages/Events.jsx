@@ -13,17 +13,43 @@ function resolveDate(e) {
   const day = parseInt(e.day, 10)
   if (m < 0 || !day) return null
   const now = new Date()
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  let year = now.getFullYear()
-  if (new Date(year, m, day) < today) year += 1
-  return { year, month: m + 1, day }
+  const year = now.getFullYear()
+  const today = new Date(year, now.getMonth(), now.getDate())
+  // Events are stored as day + month only and are expected to recur every
+  // year. To support past events, resolve a day+month to the most recent
+  // occurrence that is today or later (upcoming) or, if it already passed
+  // this year, the most recent past occurrence that is before today.
+  const thisYearDate = new Date(year, m, day)
+  if (thisYearDate >= today) return { year: thisYearDate.getFullYear(), month: thisYearDate.getMonth() + 1, day: thisYearDate.getDate() }
+  // Date already passed this year - the most recent occurrence is last
+  // year, which is a past event. Find the most recent past date by
+  // scanning backward.
+  for (let y = year - 1; y >= year - 20; y -= 1) {
+    const d = new Date(y, m, day)
+    const midnightToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    if (d < midnightToday) return { year: y, month: m + 1, day }
+  }
+  return { year, month: m + 1, day } // fallback (should not normally happen)
+}
+
+/**
+ * Returns true when the resolved occurrence of an event is strictly before
+ * today's midnight in the local (Dubai-aligned) calendar. This is the single
+ * source of truth for the past/upcoming split: both resolveDate and the three
+ * tab filters use the same midnight reference, so a recurring event that has
+ * already occurred this year correctly moves into Past Events as soon as its
+ * date passes.
+ */
+function isPastEvent(e, today0) {
+  if (!e.date) return false
+  const millis = Date.UTC(e.date.year, e.date.month - 1, e.date.day)
+  return millis < today0.getTime()
 }
 
 const pad = (n) => String(n).padStart(2, '0')
 
 // Opens the event prefilled in Google Calendar (all-day, Dubai timezone).
-function googleCalendarUrl(e) {
-  const d = resolveDate(e)
+function googleCalendarUrl(e) {  const d = resolveDate(e)
   if (!d) return null
   const endDt = new Date(d.year, d.month - 1, d.day + 1) // all-day: end = next day
   const dates = `${d.year}${pad(d.month)}${pad(d.day)}/${endDt.getFullYear()}${pad(endDt.getMonth() + 1)}${pad(endDt.getDate())}`
@@ -63,19 +89,35 @@ export default function Events() {
   const { data } = useAdmin()
   const [tab, setTab] = useState('upcoming')
 
+  const today0 = useMemo(
+    () => {
+      const t = new Date()
+      t.setHours(0, 0, 0, 0)
+      // UTC midnight so local timezone offsets (Dubai is UTC+4) cannot shift
+      // the boundary by a day for events whose resolved date is compared here.
+      t.setMinutes(t.getMinutes() - t.getTimezoneOffset())
+      return t
+    },
+    [],
+  )
+
   const withDates = useMemo(
     () =>
       data.events
         .map((e) => ({ ...e, date: resolveDate(e) }))
-        .filter((e) => e.date)
+        .filter(Boolean)
         .sort((a, b) =>
-          a.date.year - b.date.year || a.date.month - b.date.month || a.date.day - b.date.day,
+          a.date.year - b.date.year ||
+          a.date.month - b.date.month ||
+          a.date.day - b.date.day ||
+          // Events inside the same month: past ones first so the divider
+          // between past and upcoming lands *between* them rather than inside
+          // a same-day group. Same day → stable (no swap).
+          isPastEvent(a, today0) - isPastEvent(b, today0),
         ),
-    [data.events],
+    [data.events, today0],
   )
-
-  const today0 = new Date(); today0.setHours(0, 0, 0, 0)
-  const upcoming = withDates.filter((e) => new Date(e.date.year, e.date.month - 1, e.date.day) >= today0)
+  const upcoming = withDates.filter((e) => !isPastEvent(e, today0))
 
   const monthGroups = useMemo(() => {
     const groups = []
@@ -213,10 +255,7 @@ export default function Events() {
 
           {tab === 'past' && (
             <div className="space-y-6">
-              {withDates.filter((e) => {
-                const today = new Date(); today.setHours(0, 0, 0, 0)
-                return new Date(e.date.year, e.date.month - 1, e.date.day) < today
-              }).map((e, i) => (
+              {withDates.filter((e) => isPastEvent(e, today0)).map((e, i) => (
                 <Reveal key={e.id} delay={i * 80}>
                   <div className="rounded-2xl bg-card border border-border p-6 flex flex-col md:flex-row gap-6 md:items-center opacity-80">
                     <div className="shrink-0 w-20 h-20 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center">
@@ -236,10 +275,7 @@ export default function Events() {
                   </div>
                 </Reveal>
               ))}
-              {withDates.filter((e) => {
-                const today = new Date(); today.setHours(0, 0, 0, 0)
-                return new Date(e.date.year, e.date.month - 1, e.date.day) < today
-              }).length === 0 && (
+              {withDates.filter((e) => isPastEvent(e, today0)).length === 0 && (
                 <p className="text-center text-muted-foreground py-16">No past events yet — the term has just begun.</p>
               )}
             </div>
